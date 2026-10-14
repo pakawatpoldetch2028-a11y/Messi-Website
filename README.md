@@ -6,8 +6,46 @@ links, and image paths live in plain YAML files under `src/content/`, separate
 from the layout code, so updating the site means editing text files and
 dropping photographs into folders.
 
+The design is a research journal crossed with a contemporary portfolio: cool
+white pages, deep navy for text and a few dark sections, cobalt blue as the
+main accent, teal as the second, and burnt orange for small warm details.
+Headings are set in Manrope, text in Source Sans 3, and dates, figure labels
+and annotations in JetBrains Mono. Everything tunable is in
+`src/styles/global.css`.
+
+## Checklist: where to add your material
+
+| Material | Where it goes | Notes |
+| --- | --- | --- |
+| **Handwritten "Messi" mark** | `src/assets/images/marks/messi-mark.png`, referenced in `site.yaml` → `mark` | Already in place from your scan. Replace the file with a better scan at any time; clear `src` to fall back to the typed nickname. |
+| **Portrait** | `src/content/home.yaml` → `opening.portrait`, `about.yaml` → `portrait` | Already in place. |
+| **Two candid photographs (home)** | `home.yaml` → `opening.candids` | Lab work, a performance, a presentation, project testing. |
+| **Home preview photographs** | `home.yaml` → `preview.images` | Music, speaking, competitions. Paths can repeat photos used on Ideas & Expression. |
+| **Laboratory / pond photograph** | `projects/aquaculture-research.yaml` → `hero` | Use `caption` for the occasion and your part; `annotation` for a short note. |
+| **Research figure or poster** | `projects/aquaculture-research.yaml` → `figure` | Shown with a paper edge beside the photograph. |
+| **ShrimpPulse screenshot** | `projects/shrimppulse.yaml` → `hero` | Shown in a phone frame; a tall (about 9:19) screenshot fits best. |
+| **ShrimpPulse example interaction** | `projects/shrimppulse.yaml` → `interaction.messages` | A real exchange, as a list of `from: user` / `from: tool` messages. |
+| **Field photographs** | `projects/shrimppulse.yaml` → `galleries` | |
+| **Neuron visualisation** | `projects/neuroscience.yaml` → `hero` | |
+| **Report excerpt and PDF** | `projects/neuroscience.yaml` → `excerpts[0]` (`text`, `href`), PDF in `public/files/` | A report page image goes in `figure`. |
+| **Human fMRI updates and figures** | `projects/neuroscience.yaml` → `sections[0].updates` and `sections[0].image` | Dated entries; set `status: archived` to retire one. |
+| **Telesync device and app images** | `projects/telesync.yaml` → `hero` (device) and `figure` (app, phone-framed) | |
+| **Demonstration videos** | `projects/*.yaml` → `video` (YouTube link or file in `public/files/`) | The frame shows a labelled placeholder until a source is set; no player appears without media. |
+| **Performance photographs** | `beyond/music.yaml` → `featureImage` and `gallery` | |
+| **Recordings** | `beyond/music.yaml` → `recordings` (title, date, caption, `src` or `href`) | Hidden until a source is set. |
+| **What playing means to you** | `beyond/music.yaml` → `reflection.body` | |
+| **TEDx / speaking photograph and video** | `beyond/communication.yaml` → `featureImage`, `video` | |
+| **Competition photographs** | `beyond/*.yaml` → `gallery` | |
+| **Essay excerpts** | `beyond/economics.yaml`, `beyond/history-philosophy.yaml` → `excerpts` | Title, date, attribution, `text`, optional `href` to the full essay. |
+| **Personal reflections** | `about.yaml` → `reflection`, and `reflection` in each `beyond/*.yaml` | Each shows a labelled slot until `body` has text. Remove `placeholder` to hide an empty one instead. |
+| **Current work** | `about.yaml` → `currently.items` | Dated; `status: archived` retires an entry, `showArchived: true` keeps showing them. |
+| **Connections in your own words** | `connections.yaml` → each edge's `note` | Shown in the diagram panel when filled in. |
+| **Certificates** | `milestones.yaml` → each entry's `image` | |
+| **CV, email** | `site.yaml` → `cv`, `email` | Hidden until set. |
+
 ## Contents
 
+0. [Checklist: where to add your material](#checklist-where-to-add-your-material)
 1. [Running the site](#running-the-site)
 2. [Where everything lives](#where-everything-lives)
 3. [Editing text](#editing-text)
@@ -15,7 +53,8 @@ dropping photographs into folders.
 5. [Updating projects](#updating-projects)
 6. [Updating milestones](#updating-milestones)
 7. [Publications](#publications)
-8. [Beyond the Lab](#beyond-the-lab)
+8. [Ideas & Expression](#ideas--expression)
+8a. [Connections diagram](#connections-diagram)
 9. [Hiding and showing things](#hiding-and-showing-things)
 10. [Files, videos, and recordings](#files-videos-and-recordings)
 11. [Publishing the site](#publishing-the-site)
@@ -49,10 +88,11 @@ src/content/              ← everything you will edit
     neuroscience.yaml
     telesync.yaml
   publications.yaml       the papers, referenced by id from project files
-  beyond/                 one file per Beyond the Lab section
+  beyond/                 one file per Ideas & Expression section (route stays /beyond)
+  connections.yaml        the interactive "how the pieces connect" diagram on the home page
   milestones.yaml         the dated record, grouped by discipline
 
-src/assets/images/        ← photographs, by category (see the README inside)
+src/assets/images/        ← photographs, by category (see the README inside); marks/ holds the handwritten mark
 public/files/             ← PDFs, videos, audio (CV, reports, demos, recordings)
 
 src/pages/                page templates (routes)
@@ -96,9 +136,15 @@ site, so you can leave reminders to yourself there.
    hero:
      src: research/kasetsart-lab-2026.jpg   # path inside src/assets/images
      alt: Me at a bench in the fisheries laboratory, pipetting samples.
-     caption: Faculty of Fisheries, Kasetsart University, 2026.
+     caption: Feeding trial sampling day; I prepared and labelled the samples.
+     annotation: Kasetsart University, 2026 # short monospace note above the caption
+     label: Fig. 1                           # small corner label (optional)
      position: 50% 30%                       # which part to keep when cropped
+     frame: none                             # none | phone | paper
    ```
+
+   Write captions as the occasion plus your involvement. `frame: phone` draws
+   a device bezel around a screenshot; `frame: paper` gives a document edge.
 
 Every slot already exists with an empty `src`, showing a placeholder frame
 until you fill it. `alt` describes the picture for screen readers; write it as
@@ -122,7 +168,12 @@ Each case study in `src/content/projects/` has the same shape:
 | `status`       | `label` (free text) and `tone`: `active`, `complete`, or `planned`        |
 | `role`, `period`, `affiliation` | Shown in the metadata row; leave out any you don't want  |
 | `hero`, `card` | Image slots for the page header and for cards                             |
+| `layout`       | Page composition: `research`, `product`, `report`, or `device`            |
+| `figure`       | A second image: research figure/poster, report preview, or app screens    |
 | `intro`        | The short "In short" paragraph, always visible                            |
+| `interaction`  | An example chatbot exchange (`messages` list); shows a slot while empty   |
+| `excerpts`     | Report excerpts: title, date, attribution, `text`, optional `href`        |
+| `sections`     | Extra narrative sections with an optional image and dated `updates`       |
 | `steps`        | The case-study structure: `question`, `approach`, `contribution`, `evidence`, `next` |
 | `timeline`     | Dated events (ShrimpPulse uses this)                                      |
 | `metrics`      | Measured results, hidden until you add them                               |
@@ -174,14 +225,32 @@ papers by `id`. The three current entries use descriptive titles; replace each
 for your own records. Use `status: in-progress` for work that is not yet
 published; it is labelled as such.
 
-## Beyond the Lab
+## Ideas & Expression
 
-Each file in `src/content/beyond/` is one section, in `order`. A section has a
-`body`, optional `highlights` (label, detail, link), optional `items` (an
-activity with a role and description), an optional `gallery`, optional
-`recordings`, and an optional `reflection` that is hidden while its `body` is
-empty. The volunteering and tutoring files are `published: false` until their
+The page lives at `/beyond` (the route is unchanged so existing links work);
+its navigation label is set in `site.yaml`. Each file in `src/content/beyond/`
+is one section, in `order`, and renders only the material it has:
+
+- `featureImage`: one larger photograph for the section
+- `body`, `highlights` (label, detail, link), `items` (an activity with role and description)
+- `excerpts`: essay excerpts (title, date, attribution, `text`, optional `href`)
+- `gallery` and `galleryHeading`
+- `recordings` (title, date, caption, `src` or `href`); `recordingsPlaceholder` labels the empty slot
+- `video`: a YouTube link or file, e.g. for the TEDx talk
+- `reflection`: a labelled slot until `body` has text
+
+The volunteering and tutoring files are `published: false` until their
 details are confirmed.
+
+## Connections diagram
+
+`src/content/connections.yaml` holds the nodes (your work and interests, with
+positions in the diagram) and the edges between them, each with a short
+explanation based on the content elsewhere on the site. Add your own
+interpretation to an edge's `note` and it appears in the panel when that
+connection is shown. The diagram works with mouse, touch and keyboard (arrow
+keys move between topics, Escape clears), and the list beneath it works
+without JavaScript.
 
 ## Hiding and showing things
 
@@ -193,7 +262,8 @@ Other optional pieces hide themselves when empty:
 
 - email, CV, and the LinkedIn link in `site.yaml`
 - `links`, `related`, `metrics`, `video`, `recordings`
-- `reflection` sections (hidden until `body` has text)
+- `reflection`, `excerpts` and `interaction` show a labelled slot while empty;
+  remove `placeholder` (or set `published: false`) to hide one instead
 - the activity photograph on the about page (leave `src` empty)
 
 The small labels inside empty image frames ("Laboratory photograph") can be

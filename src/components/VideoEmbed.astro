@@ -1,38 +1,43 @@
 ---
 /**
- * Optional video: either a YouTube link or a file in public/. Renders nothing
- * if neither is set, so the layout never shows an empty player.
+ * Optional video: a YouTube link or a file in public/. With neither, it
+ * renders a labelled placeholder frame (if `placeholder` is set) or nothing.
+ * No player controls are shown without media.
  */
 import Figure from './Figure.astro';
 import { href } from '../lib/url';
 import { mdInline } from '../lib/markdown';
+import { formatDate } from '../lib/dates';
 
 interface Props {
   video?: {
     title?: string;
+    date?: string;
     youtube?: string;
     src?: string;
-    poster?: Parameters<typeof Figure>[0]['image'];
     caption?: string;
+    placeholder?: string;
     published?: boolean;
   };
   placeholder?: string;
+  ratio?: string;
 }
-const { video, placeholder } = Astro.props;
+const { video, placeholder, ratio = '16/9' } = Astro.props;
 
 function youtubeId(url: string): string | undefined {
   const m = url.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/)([\w-]{6,})/);
   return m?.[1];
 }
 
-const show = video && video.published !== false && (video.youtube || video.src);
+const visible = !video || video.published !== false;
+const hasMedia = visible && video && (video.youtube || video.src);
 const id = video?.youtube ? youtubeId(video.youtube) : undefined;
-const posterSrc = undefined;
+const label = video?.placeholder ?? placeholder;
 ---
 
 {
-  show ? (
-    <figure class="video">
+  hasMedia ? (
+    <figure class="video" style={`--ratio: ${ratio};`}>
       <div class="video__frame">
         {id ? (
           <iframe
@@ -43,17 +48,23 @@ const posterSrc = undefined;
             allowfullscreen
           />
         ) : (
-          <video controls preload="metadata" poster={posterSrc} src={href(video!.src!)}>
+          <video controls preload="metadata" src={href(video!.src!)}>
             <p>
               Your browser cannot play this video. <a href={href(video!.src!)}>Download it instead.</a>
             </p>
           </video>
         )}
       </div>
-      {video?.caption && <figcaption class="video__caption sans" set:html={mdInline(video.caption)} />}
+      {(video?.title || video?.caption || video?.date) && (
+        <figcaption class="video__caption">
+          {video?.date && <span class="mono">{formatDate(video.date)}</span>}
+          {video?.title && <span class="video__title">{video.title}</span>}
+          {video?.caption && <span set:html={mdInline(video.caption)} />}
+        </figcaption>
+      )}
     </figure>
-  ) : placeholder ? (
-    <Figure image={{ placeholder, alt: '' }} ratio="16/9" sizes="(min-width: 72rem) 56rem, 100vw" />
+  ) : visible && label ? (
+    <Figure image={{ placeholder: label, alt: '' }} ratio={ratio} sizes="(min-width: 76rem) 48rem, 100vw" />
   ) : null
 }
 
@@ -63,11 +74,10 @@ const posterSrc = undefined;
   }
   .video__frame {
     position: relative;
-    aspect-ratio: 16 / 9;
-    background: var(--paper-3);
+    aspect-ratio: var(--ratio);
+    background: var(--navy);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: inset 0 0 0 1px var(--line);
   }
   .video__frame iframe,
   .video__frame video {
@@ -78,8 +88,15 @@ const posterSrc = undefined;
     border: 0;
   }
   .video__caption {
-    margin-top: 0.7rem;
-    font-size: 0.8rem;
-    color: var(--ink-3);
+    display: grid;
+    gap: 0.2rem;
+    margin-top: 0.75rem;
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+  }
+  .video__title {
+    font-family: var(--font-head);
+    font-weight: 600;
+    color: var(--ink);
   }
 </style>

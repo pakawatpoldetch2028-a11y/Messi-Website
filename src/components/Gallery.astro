@@ -1,27 +1,30 @@
 ---
 /**
- * A grid of Figure slots. Unpublished slots are skipped.
+ * A grid of Figure slots. `pattern: 'varied'` gives the first image double
+ * width so a set of photographs reads as a composition, not a contact sheet.
  */
-import Figure from './Figure.astro';
-
-type ImageSlot = Parameters<typeof Figure>[0] extends { image?: infer T } ? T : never;
+import Figure, { type ImageSlot } from './Figure.astro';
 
 interface Props {
-  images: NonNullable<ImageSlot>[];
+  images: ImageSlot[];
   columns?: number;
   ratio?: string;
+  pattern?: 'even' | 'varied';
+  tone?: 'light' | 'dark';
   class?: string;
 }
-const { images, columns = 3, ratio = '4/3', class: className } = Astro.props;
+const { images, columns = 3, ratio = '4/3', pattern = 'even', tone = 'light', class: className } = Astro.props;
 const visible = images.filter((img) => img.published !== false);
-const sizes = `(min-width: 72rem) ${Math.round(72 / columns)}rem, (min-width: 48em) ${Math.round(100 / columns)}vw, 100vw`;
+const sizes = `(min-width: 76rem) ${Math.round(76 / columns)}rem, (min-width: 48em) ${Math.round(100 / columns)}vw, 100vw`;
 ---
 
 {
   visible.length > 0 && (
-    <div class:list={['gallery', className]} style={`--cols: ${columns};`}>
-      {visible.map((img) => (
-        <Figure image={img} ratio={ratio} sizes={sizes} />
+    <div class:list={['gallery', `gallery--${pattern}`, className]} style={`--cols: ${columns};`}>
+      {visible.map((img, i) => (
+        <div class:list={['gallery__item', { 'gallery__item--wide': pattern === 'varied' && i === 0 }]}>
+          <Figure image={img} ratio={ratio} sizes={sizes} tone={tone} />
+        </div>
       ))}
     </div>
   )
@@ -31,6 +34,30 @@ const sizes = `(min-width: 72rem) ${Math.round(72 / columns)}rem, (min-width: 48
   .gallery {
     display: grid;
     gap: var(--space-5);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(72rem / var(--cols) - 2rem)), 1fr));
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  }
+  @media (max-width: 47.99em) {
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+    .gallery[style*='--cols: 3'],
+    .gallery[style*='--cols: 4'] {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 48em) {
+    /* The first image spans two columns and two rows; the next two stack beside it. */
+    .gallery__item--wide {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .gallery--varied .gallery__item--wide :global(.figure),
+    .gallery--varied .gallery__item--wide :global(.figure__frame) {
+      height: 100%;
+    }
+    .gallery--varied .gallery__item--wide :global(.figure__frame) {
+      aspect-ratio: auto;
+      min-height: 100%;
+    }
   }
 </style>

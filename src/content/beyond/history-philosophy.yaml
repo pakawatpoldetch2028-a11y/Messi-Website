@@ -1,4 +1,4 @@
-# Beyond the Lab: history and philosophy
+# Ideas & Expression: history and philosophy
 title: History and philosophy
 lede: Institutions, interpretation, and what we should value
 order: 2
@@ -27,6 +27,38 @@ highlights:
   - label: International History Olympiad 2025
     detail: First place, written exam, and placings in four further categories
     href: /milestones#iho-2025
+excerptsHeading: From my writing
+excerpts:
+  - title: Philosophy essay excerpt
+    date: ''
+    attribution: International Philosophy Olympiad
+    text: ''
+    href: ''
+    hrefLabel: Read the full essay
+    placeholder: Essay excerpt
+  - title: History essay excerpt
+    date: ''
+    attribution: ''
+    text: ''
+    href: ''
+    hrefLabel: Read the full essay
+    placeholder: Essay excerpt
+gallery:
+  - src: ''
+    alt: ''
+    caption: ''
+    annotation: ''
+    ratio: '3/2'
+    placeholder: Competition photograph
+  - src: ''
+    alt: ''
+    caption: ''
+    annotation: ''
+    ratio: '3/2'
+    placeholder: Competition photograph
+galleryHeading: Competitions
 reflection:
   title: A reflection
+  date: ''
   body: ''
+  placeholder: Personal reflection

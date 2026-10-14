@@ -12,7 +12,6 @@ import { href } from '../lib/url';
 interface Props {
   title: string;
   description?: string;
-  /** Set to true on the home page to use the site name alone as the title. */
   isHome?: boolean;
   ogImage?: string;
 }
@@ -36,9 +35,7 @@ const imageUrl = image && Astro.site ? new URL(href(image), Astro.site).href : u
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={href('/sitemap-index.xml')} />
     <meta name="author" content={site.name} />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#f7f3ec" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#161614" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7fafc" />
     <meta property="og:type" content={isHome ? 'website' : 'article'} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />

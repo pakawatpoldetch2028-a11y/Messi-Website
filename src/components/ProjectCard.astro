@@ -1,44 +1,58 @@
 ---
+/**
+ * A project preview. `variant="lead"` is the large featured composition;
+ * `variant="small"` is the compact card.
+ */
 import type { CollectionEntry } from 'astro:content';
 import Figure from './Figure.astro';
 import StatusPill from './StatusPill.astro';
+import Prose from './Prose.astro';
 import { href } from '../lib/url';
 
 interface Props {
   project: CollectionEntry<'projects'>;
-  ratio?: string;
+  variant?: 'lead' | 'small';
+  note?: string;
   eager?: boolean;
+  index?: string;
 }
-const { project, ratio = '4/3', eager = false } = Astro.props;
+const { project, variant = 'small', note, eager = false, index } = Astro.props;
 const { data } = project;
 const image = data.card ?? data.hero;
 const url = href(`/work/${project.id}`);
+const isLead = variant === 'lead';
 ---
 
-<article class="card">
+<article class:list={['card', `card--${variant}`]}>
   <a class="card__media" href={url} tabindex="-1" aria-hidden="true">
     <Figure
       image={image}
-      ratio={ratio}
-      sizes="(min-width: 72rem) 22rem, (min-width: 48em) 33vw, 100vw"
+      ratio={isLead ? '16/10' : '4/3'}
+      sizes={isLead ? '(min-width: 76rem) 46rem, (min-width: 48em) 60vw, 100vw' : '(min-width: 76rem) 36rem, (min-width: 48em) 50vw, 100vw'}
       loading={eager ? 'eager' : 'lazy'}
-      placeholder={data.title}
+      placeholder={image?.placeholder ?? data.title}
     />
   </a>
   <div class="card__body">
-    <p class="eyebrow">{data.area}</p>
+    <p class="eyebrow">
+      {index && <span class="index">{index} · </span>}
+      {data.area}
+    </p>
     <h3 class="card__title">
       <a href={url}>{data.title}</a>
     </h3>
     <p class="card__summary">{data.summary}</p>
+    {isLead && note && <Prose text={note} small muted class="card__note" />}
     <div class="card__foot">
       <StatusPill label={data.status.label} tone={data.status.tone} />
+      <span class="card__cta">Read the case study →</span>
     </div>
   </div>
 </article>
 
 <style>
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
@@ -52,7 +66,7 @@ const url = href(`/work/${project.id}`);
     transition: transform var(--dur) var(--ease);
   }
   .card:hover .card__media :global(.figure__frame) {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
   }
   .card__body {
     display: flex;
@@ -64,8 +78,11 @@ const url = href(`/work/${project.id}`);
     margin-bottom: 0;
   }
   .card__title {
-    font-size: var(--step-1);
+    font-size: var(--text-h3);
     margin: 0;
+  }
+  .card--lead .card__title {
+    font-size: var(--text-h2);
   }
   .card__title a {
     color: var(--ink);
@@ -76,19 +93,39 @@ const url = href(`/work/${project.id}`);
     position: absolute;
     inset: 0;
   }
-  .card {
-    position: relative;
-  }
   .card__title a:hover {
-    color: var(--accent-ink);
+    color: var(--cobalt-ink);
   }
   .card__summary {
     color: var(--ink-2);
-    font-size: 0.98rem;
     margin: 0;
+    max-width: 48ch;
+  }
+  .card--lead .card__summary {
+    font-size: var(--text-lead);
+    line-height: 1.4;
   }
   .card__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
     margin-top: auto;
-    padding-top: var(--space-2);
+    padding-top: var(--space-3);
+  }
+  .card__cta {
+    font-family: var(--font-head);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--cobalt-ink);
+  }
+
+  @media (min-width: 48em) {
+    .card--lead {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: var(--space-6);
+      align-items: end;
+    }
   }
 </style>

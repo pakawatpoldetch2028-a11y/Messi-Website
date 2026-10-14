@@ -1,5 +1,6 @@
 # ---------------------------------------------------------------------------
 # Case study: neuroscience and connectomics
+# layout: report  (visualisation, report excerpt and preview, fMRI section)
 # ---------------------------------------------------------------------------
 
 title: The H1 neuron and the fly visual system
@@ -10,9 +11,11 @@ summary: >-
   2025 Fly Connectome Research Competition.
 order: 3
 published: true
+layout: report
 status:
   label: Report complete · continuing in human neuroscience
   tone: active
+  note: The fly report is finished; the human fMRI work below is ongoing.
 period: 2025 – 2026
 role: Author
 
@@ -22,12 +25,25 @@ card:
   ratio: '4/3'
   placeholder: Neuron visualisation
 
+# The main image: an actual neuron visualisation from the connectome data.
 hero:
   src: ''
   alt: ''
   caption: ''
+  annotation: ''
+  label: Fig. 1
   ratio: '16/9'
   placeholder: Neuron visualisation
+
+# A preview of the report (first page or a key figure).
+figure:
+  src: ''
+  alt: ''
+  caption: ''
+  annotation: ''
+  ratio: '210/297'
+  frame: paper
+  placeholder: Report preview
 
 intro: |
   A connectome is a wiring diagram: a map of every neuron in a brain and every
@@ -72,41 +88,60 @@ steps:
     body: |
       The report won the High School Category of the 2025 Fly Connectome
       Research Competition, announced in 2026. The award supports the work; the
-      work itself is in the report, which will be available to read here once I
-      add it.
+      work itself is in the report, an excerpt of which will appear on this
+      page once I add it.
   - key: next
     title: The next question
     body: |
-      This year I am continuing in human neuroscience. The Connectome Research
-      Competition has expanded to use fMRI data from humans, and I also aim to
-      compete in the International Neuroscience Olympiad. The question stays
-      the same at a different scale: what does structure tell us about
-      function, and how much does the answer change when the data is a
-      whole-brain scan rather than a wiring diagram?
+      The question stays the same at a different scale: what does structure
+      tell us about function, and how much does the answer change when the
+      data is a whole-brain scan rather than a wiring diagram? That is the
+      subject of the human fMRI work described below.
 
-galleries:
-  - heading: Figures and the report
-    columns: 2
-    images:
-      - src: ''
-        alt: ''
-        caption: ''
-        ratio: '4/3'
-        placeholder: Neuron visualisation
-      - src: ''
-        alt: ''
-        caption: ''
-        ratio: '210/297'
-        placeholder: Report preview
+# A short excerpt from the report, with a link to the full PDF once added.
+excerptsHeading: From the report
+excerpts:
+  - title: Excerpt from the H1 report
+    date: ''
+    attribution: Fly Connectome Research Competition 2025, High School Category
+    text: ''
+    href: ''
+    hrefLabel: Read the full report (PDF)
+    placeholder: Report excerpt
+
+# Extra sections. This one holds the ongoing human fMRI work and its updates.
+sections:
+  - id: human-fmri
+    eyebrow: Ongoing · 2026–27
+    heading: Human neuroscience with fMRI data
+    body: |
+      This year I am continuing my neuroscience research in humans. The
+      Connectome Research Competition has expanded to use fMRI data from
+      humans, and I am working with that data. I also aim to compete in the
+      International Neuroscience Olympiad this year.
+
+      This work is in progress. Nothing here is a result yet, and I will add
+      figures and updates as the work develops.
+    image:
+      src: ''
+      alt: ''
+      caption: ''
+      annotation: ''
+      ratio: '4/3'
+      placeholder: Future figure
+    # Dated updates. Add new entries at the top; set status: archived to retire one.
+    updates: []
+    # updates:
+    #   - title: First look at the dataset
+    #     date: 2026-11
+    #     body: "..."
+    #     status: active
 
 links: []
 # Example:
 #  - label: Read the report (PDF)
 #    href: /files/h1-neuron-report.pdf
 #    kind: download
-#  - label: Competition announcement
-#    href: https://example.com
-#    kind: external
 
 related:
   - label: FlyComp 2025 on the milestones page
@@ -115,7 +150,8 @@ related:
 
 notes: |
   EDITING NOTES (never shown on the site)
-  - Put the report PDF in public/files/ and add a download link under `links`.
-  - Add a neuron visualisation image to src/assets/images/neuroscience/ and
-    reference it in the gallery and the hero.
-  - Add the competition's official name and link if you want them public.
+  - Put the report PDF in public/files/, set excerpts[0].href to
+    /files/<name>.pdf and paste a short passage into excerpts[0].text.
+  - Add a neuron visualisation to src/assets/images/neuroscience/ and set
+    hero.src; a page image of the report for figure.src.
+  - Add fMRI updates under sections[0].updates as the work develops.

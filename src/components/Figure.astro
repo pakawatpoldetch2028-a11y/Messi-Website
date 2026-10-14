@@ -2,27 +2,31 @@
 /**
  * The reusable image component. Pass an image slot from a content file and it
  * renders an optimised, responsive picture inside a frame with a fixed aspect
- * ratio. If the slot is empty (or the file is missing) it renders a
- * placeholder frame instead.
+ * ratio, plus optional figure label, caption and margin annotation. If the
+ * slot is empty (or the file is missing) it renders a labelled placeholder.
  *
  * Props:
  *   image     an object matching imageSchema in content.config.ts
  *   ratio     default aspect ratio for this slot (overridden by image.ratio)
  *   sizes     the HTML `sizes` attribute, describing the rendered width
- *   variant   'plain' | 'framed' | 'offset' (decorative outline behind)
+ *   frame     'none' | 'phone' | 'paper' (overridden by image.frame)
  *   loading   'lazy' (default) or 'eager' for above-the-fold images
+ *   tone      'light' | 'dark' placeholder styling
  */
 import { Picture } from 'astro:assets';
 import Placeholder from './Placeholder.astro';
 import { resolveImage } from '../lib/images';
 import { mdInline } from '../lib/markdown';
 
-type ImageSlot = {
+export type ImageSlot = {
   src?: string;
   alt?: string;
   caption?: string;
+  label?: string;
+  annotation?: string;
   position?: string;
   ratio?: string;
+  frame?: 'none' | 'phone' | 'paper';
   placeholder?: string;
   published?: boolean;
 };
@@ -31,8 +35,9 @@ interface Props {
   image?: ImageSlot;
   ratio?: string;
   sizes?: string;
-  variant?: 'plain' | 'framed' | 'offset';
+  frame?: 'none' | 'phone' | 'paper';
   loading?: 'lazy' | 'eager';
+  tone?: 'light' | 'dark';
   class?: string;
   placeholder?: string;
 }
@@ -40,21 +45,23 @@ interface Props {
 const {
   image,
   ratio: defaultRatio = '4/3',
-  sizes = '(min-width: 72rem) 36rem, (min-width: 48em) 50vw, 100vw',
-  variant = 'framed',
+  sizes = '(min-width: 76rem) 38rem, (min-width: 48em) 50vw, 100vw',
+  frame: defaultFrame = 'none',
   loading = 'lazy',
+  tone = 'light',
   class: className,
   placeholder: fallbackPlaceholder,
 } = Astro.props;
 
-const ratio = image?.ratio ?? defaultRatio;
+const frame = image?.frame && image.frame !== 'none' ? image.frame : defaultFrame;
+const ratio = image?.ratio ?? (frame === 'phone' ? '9/19' : defaultRatio);
 const resolved = resolveImage(image?.src);
 const label = image?.placeholder ?? fallbackPlaceholder;
 const caption = image?.caption;
 const position = image?.position ?? '50% 50%';
 ---
 
-<figure class:list={['figure', `figure--${variant}`, className]} style={`--ratio: ${ratio};`}>
+<figure class:list={['figure', `figure--${frame}`, `figure--${tone}`, className]} style={`--ratio: ${ratio};`}>
   <div class="figure__frame">
     {
       resolved ? (
@@ -70,11 +77,19 @@ const position = image?.position ?? '50% 50%';
           style={`object-position: ${position};`}
         />
       ) : (
-        <Placeholder label={label} />
+        <Placeholder label={label} tone={tone} />
       )
     }
+    {image?.label && <span class="figure__label">{image.label}</span>}
   </div>
-  {caption && <figcaption class="figure__caption sans" set:html={mdInline(caption)} />}
+  {
+    (caption || image?.annotation) && (
+      <figcaption class="figure__caption">
+        {image?.annotation && <span class="figure__annotation">{image.annotation}</span>}
+        {caption && <span class="figure__text" set:html={mdInline(caption)} />}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
@@ -86,23 +101,13 @@ const position = image?.position ?? '50% 50%';
     position: relative;
     aspect-ratio: var(--ratio);
     overflow: hidden;
-    background: var(--paper-2);
+    background: var(--bg-2);
     border-radius: var(--radius-lg);
-  }
-  .figure--framed .figure__frame {
     box-shadow: inset 0 0 0 1px var(--line);
   }
-  .figure--offset .figure__frame {
-    border-radius: var(--radius-lg);
-  }
-  .figure--offset::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    transform: translate(0.9rem, 0.9rem);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-lg);
-    z-index: -1;
+  .figure--dark .figure__frame {
+    background: var(--navy-2);
+    box-shadow: inset 0 0 0 1px var(--navy-line);
   }
   .figure__frame :global(img) {
     position: absolute;
@@ -111,10 +116,83 @@ const position = image?.position ?? '50% 50%';
     height: 100%;
     object-fit: cover;
   }
+
+  /* Phone bezel */
+  .figure--phone .figure__frame {
+    border-radius: 2.2rem;
+    padding: 0.55rem;
+    background: var(--navy);
+    box-shadow:
+      inset 0 0 0 1px var(--navy-line),
+      var(--shadow);
+  }
+  .figure--phone .figure__frame > :global(*) {
+    border-radius: 1.7rem;
+  }
+  .figure--phone .figure__frame :global(img),
+  .figure--phone .figure__frame :global(.placeholder) {
+    position: absolute;
+    inset: 0.55rem;
+    width: auto;
+    height: auto;
+    overflow: hidden;
+  }
+  .figure--phone .figure__frame::before {
+    content: '';
+    position: absolute;
+    top: 0.95rem;
+    left: 50%;
+    width: 28%;
+    height: 0.45rem;
+    transform: translateX(-50%);
+    background: var(--navy);
+    border-radius: 999px;
+    z-index: 2;
+  }
+
+  /* Paper edge, for documents */
+  .figure--paper .figure__frame {
+    border-radius: 3px;
+    box-shadow:
+      inset 0 0 0 1px var(--line-strong),
+      0 1px 0 var(--bg-3),
+      0 10px 24px -14px rgb(23 43 70 / 0.35);
+  }
+
+  .figure__label {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: color-mix(in oklab, var(--bg) 92%, transparent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
+  .figure--phone .figure__label {
+    top: 1.6rem;
+    left: 1.2rem;
+  }
   .figure__caption {
-    margin-top: 0.7rem;
-    font-size: 0.8rem;
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    font-size: var(--text-sm);
     line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .figure--dark .figure__caption {
+    color: var(--on-navy-2);
+  }
+  .figure__annotation {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
     color: var(--ink-3);
   }
 </style>

@@ -1,0 +1,164 @@
+---
+/**
+ * An example chatbot interaction, shown as a short transcript. With no
+ * messages it renders a labelled slot of the same shape.
+ */
+import { mdInline } from '../lib/markdown';
+import { formatDate } from '../lib/dates';
+import { getSite } from '../lib/content';
+
+interface Props {
+  interaction: {
+    heading: string;
+    intro?: string;
+    date?: string;
+    note?: string;
+    messages: { from: 'user' | 'tool'; text: string }[];
+    placeholder?: string;
+    published?: boolean;
+  };
+  userLabel?: string;
+  toolLabel?: string;
+}
+const { interaction: it, userLabel = 'Farmer', toolLabel = 'ShrimpPulse' } = Astro.props;
+const site = await getSite();
+const hasMessages = it.messages.length > 0;
+---
+
+{
+  it.published !== false && (
+    <div class="chat">
+      <div class="chat__bar">
+        <span class="chat__dot" aria-hidden="true" />
+        <span class="chat__title">{it.heading}</span>
+        {it.date && <span class="mono chat__date">{formatDate(it.date)}</span>}
+      </div>
+      {it.intro && <p class="chat__intro" set:html={mdInline(it.intro)} />}
+      {hasMessages ? (
+        <ol class="plain-list chat__log">
+          {it.messages.map((m) => (
+            <li class:list={['chat__msg', `chat__msg--${m.from}`]}>
+              <span class="chat__who mono">{m.from === 'user' ? userLabel : toolLabel}</span>
+              <p class="chat__bubble" set:html={mdInline(m.text)} />
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div class="chat__slot" aria-label={`Placeholder: ${it.placeholder ?? 'Example interaction'}`}>
+          <span class="chat__ghost chat__ghost--user" />
+          <span class="chat__ghost chat__ghost--tool" />
+          <span class="chat__ghost chat__ghost--user chat__ghost--short" />
+          {site.showPlaceholderLabels && <span class="chat__label">{it.placeholder ?? 'Example interaction'}</span>}
+        </div>
+      )}
+      {it.note && <p class="chat__note mono">{it.note}</p>}
+    </div>
+  )
+}
+
+<style>
+  .chat {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .chat__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .chat__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+  .chat__title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: var(--text-sm);
+  }
+  .chat__date {
+    margin-left: auto;
+  }
+  .chat__intro {
+    padding: 1rem 1rem 0;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+  }
+  .chat__log {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+  .chat__msg {
+    display: grid;
+    gap: 0.25rem;
+    max-width: 85%;
+  }
+  .chat__msg--user {
+    justify-self: end;
+    text-align: right;
+  }
+  .chat__who {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .chat__bubble {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 14px;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    text-align: left;
+  }
+  .chat__msg--user .chat__bubble {
+    background: var(--cobalt-soft);
+    color: var(--ink);
+    border-bottom-right-radius: 4px;
+  }
+  .chat__msg--tool .chat__bubble {
+    background: var(--bg-2);
+    border-bottom-left-radius: 4px;
+  }
+  .chat__slot {
+    position: relative;
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem 1rem 2.6rem;
+  }
+  .chat__ghost {
+    display: block;
+    height: 2.4rem;
+    width: 62%;
+    border-radius: 14px;
+    border: 1px dashed var(--line-strong);
+  }
+  .chat__ghost--user {
+    justify-self: end;
+  }
+  .chat__ghost--short {
+    width: 40%;
+  }
+  .chat__label {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .chat__note {
+    margin: 0;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--line);
+  }
+</style>

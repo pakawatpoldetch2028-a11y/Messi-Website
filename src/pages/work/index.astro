@@ -18,15 +18,14 @@ const description =
   <section class="page-head">
     <div class="wrap page-head__grid">
       <div>
-        <p class="eyebrow">Research & projects</p>
+        <p class="eyebrow eyebrow--cobalt">Research & projects</p>
         <h1>Case studies</h1>
       </div>
       <div class="page-head__intro prose prose--lead">
         <p>
-          Each project is written the same way: the question or problem, the approach, what I
-          contributed, what the evidence shows so far, and the question that comes next. I have tried
-          to keep my own contribution distinct from my collaborators' work, and finished results
-          distinct from intended benefits.
+          Each project is written the same way: the question, the approach, what I contributed, what
+          the evidence shows so far, and the question that comes next. My own contribution is kept
+          distinct from my collaborators' work, and finished results from intended benefits.
         </p>
       </div>
     </div>
@@ -39,27 +38,29 @@ const description =
           projects.map((p, i) => {
             const url = href(`/work/${p.id}`);
             const image = p.data.card ?? p.data.hero;
+            const big = i === 0;
             return (
-              <li class:list={['study', { 'study--flip': i % 2 === 1 }]}>
+              <li class:list={['study', { 'study--big': big, 'study--flip': !big && i % 2 === 0 }]}>
                 <a class="study__media" href={url} tabindex="-1" aria-hidden="true">
                   <Figure
-                    image={image}
-                    ratio="4/3"
-                    loading={i === 0 ? 'eager' : 'lazy'}
-                    sizes="(min-width: 60em) 30rem, (min-width: 48em) 45vw, 100vw"
-                    placeholder={p.data.title}
+                    image={{ ...image, frame: 'none' }}
+                    ratio={big ? '16/9' : '4/3'}
+                    loading={big ? 'eager' : 'lazy'}
+                    sizes={big ? '(min-width: 76rem) 76rem, 100vw' : '(min-width: 60em) 34rem, (min-width: 48em) 48vw, 100vw'}
+                    placeholder={image?.placeholder ?? p.data.title}
                   />
                 </a>
                 <div class="study__body">
-                  <span class="study__index sans">{String(i + 1).padStart(2, '0')}</span>
-                  <p class="eyebrow">{p.data.area}</p>
+                  <p class="eyebrow">
+                    <span class="index">{String(i + 1).padStart(2, '0')}</span> · {p.data.area}
+                  </p>
                   <h2 class="study__title">
                     <a href={url}>{p.data.title}</a>
                   </h2>
                   <p class="study__summary">{p.data.summary}</p>
                   <div class="study__meta">
                     <StatusPill label={p.data.status.label} tone={p.data.status.tone} />
-                    {p.data.role && <span class="study__role sans">{p.data.role}</span>}
+                    {p.data.role && <span class="study__role mono">{p.data.role}</span>}
                   </div>
                   <Button href={`/work/${p.id}`} variant="link">Read the case study</Button>
                 </div>
@@ -79,11 +80,9 @@ const description =
             <SectionHeading
               eyebrow="Publications"
               title="Peer-reviewed papers"
-              intro="Co-authored studies in aquaculture health and nutrition. Details and the research context are on the aquaculture page."
+              intro="Co-authored studies in aquaculture health and nutrition. The research context is on the aquaculture page."
             />
-            <Button href="/work/aquaculture-research" variant="link">
-              Aquaculture research
-            </Button>
+            <Button href="/work/aquaculture-research" variant="link">Aquaculture research</Button>
           </div>
           <div class="pubs__list">
             {publications.map((pub) => (
@@ -97,27 +96,6 @@ const description =
 </Base>
 
 <style>
-  .page-head {
-    padding-block: clamp(2.5rem, 6vw, 5rem) var(--space-7);
-  }
-  .page-head__grid {
-    display: grid;
-    gap: var(--space-5);
-    align-items: end;
-  }
-  @media (min-width: 60em) {
-    .page-head__grid {
-      grid-template-columns: 1fr 1.4fr;
-      gap: var(--space-8);
-    }
-  }
-  .page-head h1 {
-    margin-bottom: 0;
-  }
-  .page-head__intro {
-    color: var(--ink-2);
-  }
-
   .studies {
     display: grid;
     gap: var(--space-8);
@@ -127,13 +105,28 @@ const description =
     gap: var(--space-5);
     align-items: center;
   }
+  .study--big {
+    gap: var(--space-5);
+  }
   @media (min-width: 48em) {
-    .study {
+    .study:not(.study--big) {
       grid-template-columns: 1fr 1fr;
       gap: var(--space-7);
     }
     .study--flip .study__media {
       order: 2;
+    }
+    .study--big .study__body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .study--big .study__body .eyebrow {
+      grid-column: 1 / -1;
+    }
+    .study--big .study__title {
+      grid-row: 2 / 4;
     }
   }
   .study__media {
@@ -148,13 +141,8 @@ const description =
   .study__body .eyebrow {
     margin-bottom: 0;
   }
-  .study__index {
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-  }
   .study__title {
-    font-size: var(--step-3);
+    font-size: var(--text-h2);
     margin: 0;
   }
   .study__title a {
@@ -162,7 +150,7 @@ const description =
     text-decoration: none;
   }
   .study__title a:hover {
-    color: var(--accent-ink);
+    color: var(--cobalt-ink);
   }
   .study__summary {
     color: var(--ink-2);
@@ -176,11 +164,6 @@ const description =
     gap: var(--space-3);
     margin-bottom: var(--space-3);
   }
-  .study__role {
-    font-size: 0.82rem;
-    color: var(--ink-3);
-  }
-
   .pubs__grid {
     display: grid;
     gap: var(--space-6);

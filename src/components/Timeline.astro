@@ -1,22 +1,23 @@
 ---
+/** A compact dated timeline; horizontal on wide screens, vertical on small. */
 import Prose from './Prose.astro';
 import { formatDate } from '../lib/dates';
 
 interface Props {
   items: { date: string; title: string; body?: string }[];
+  compact?: boolean;
 }
-const { items } = Astro.props;
+const { items, compact = false } = Astro.props;
 ---
 
-<ol class="plain-list timeline">
+<ol class:list={['plain-list', 'timeline', { 'timeline--compact': compact }]}>
   {
     items.map((item) => (
       <li class="timeline__item">
-        <span class="timeline__date sans">{formatDate(item.date)}</span>
-        <div class="timeline__body">
-          <p class="timeline__title">{item.title}</p>
-          {item.body && <Prose text={item.body} muted class="timeline__text" />}
-        </div>
+        <span class="timeline__dot" aria-hidden="true" />
+        <span class="timeline__date mono">{formatDate(item.date)}</span>
+        <p class="timeline__title">{item.title}</p>
+        {item.body && <Prose text={item.body} muted small class="timeline__text" />}
       </li>
     ))
   }
@@ -24,51 +25,50 @@ const { items } = Astro.props;
 
 <style>
   .timeline {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    gap: var(--space-4);
+    position: relative;
+    padding-left: 1.1rem;
     border-left: 1px solid var(--line-strong);
-    margin-left: 0.35rem;
   }
   .timeline__item {
     position: relative;
-    padding: 0 0 var(--space-5) var(--space-5);
     display: grid;
-    gap: 0.3rem;
+    gap: 0.15rem;
   }
-  .timeline__item::before {
-    content: '';
+  .timeline__dot {
     position: absolute;
-    left: -5px;
+    left: calc(-1.1rem - 5px);
     top: 0.45rem;
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 3px var(--paper);
-  }
-  .timeline__item:last-child {
-    padding-bottom: 0;
-  }
-  .timeline__date {
-    font-size: 0.76rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-3);
+    background: var(--cobalt);
+    box-shadow: 0 0 0 3px var(--bg);
   }
   .timeline__title {
     margin: 0;
-    font-size: var(--step-0);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    line-height: 1.35;
   }
-  .timeline__body :global(.timeline__text) {
-    font-size: 0.95rem;
+  .timeline__item :global(.timeline__text) {
+    font-size: 0.85rem;
   }
-  @media (min-width: 48em) {
-    .timeline__item {
-      grid-template-columns: 9rem 1fr;
+
+  @media (min-width: 60em) {
+    .timeline--compact {
+      grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
       gap: var(--space-4);
+      padding-left: 0;
+      padding-top: 1.1rem;
+      border-left: 0;
+      border-top: 1px solid var(--line-strong);
     }
-    .timeline__date {
-      padding-top: 0.3rem;
+    .timeline--compact .timeline__dot {
+      left: 0;
+      top: calc(-1.1rem - 5px);
     }
   }
 </style>

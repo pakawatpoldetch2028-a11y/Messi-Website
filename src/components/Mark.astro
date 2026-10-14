@@ -1,0 +1,63 @@
+---
+/**
+ * The handwritten "Messi" mark. Renders the supplied image when
+ * site.yaml → mark.src is set, and the nickname in text until then.
+ */
+import { Image } from 'astro:assets';
+import { getSite } from '../lib/content';
+import { resolveImage } from '../lib/images';
+
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { size = 'md', tone = 'light', class: className } = Astro.props;
+const site = await getSite();
+const resolved = site.mark?.published !== false ? resolveImage(site.mark?.src) : undefined;
+---
+
+<span class:list={['mark', `mark--${size}`, `mark--${tone}`, className]}>
+  {
+    resolved ? (
+      <Image src={resolved} alt={site.mark?.alt || `${site.nickname}, handwritten`} width={480} format="webp" class="mark__img" />
+    ) : (
+      <span class="mark__text" aria-label={site.nickname}>
+        {site.nickname}
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .mark {
+    display: inline-block;
+    line-height: 1;
+  }
+  .mark :global(.mark__img) {
+    height: var(--mark-h, 2.4rem);
+    width: auto;
+  }
+  .mark--sm {
+    --mark-h: 1.6rem;
+  }
+  .mark--md {
+    --mark-h: 2.4rem;
+  }
+  .mark--lg {
+    --mark-h: 3.4rem;
+  }
+  .mark--dark :global(.mark__img) {
+    filter: invert(1) brightness(1.9);
+  }
+  .mark__text {
+    font-family: var(--font-head);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-size: var(--mark-h, 2.4rem);
+    color: var(--ink);
+  }
+  .mark--dark .mark__text {
+    color: var(--on-navy);
+  }
+</style>

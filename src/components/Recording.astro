@@ -1,0 +1,80 @@
+---
+/**
+ * An audio or video recording with title, date and caption. Nothing is
+ * rendered without a source, so there are never dead playback controls.
+ */
+import { mdInline } from '../lib/markdown';
+import { formatDate } from '../lib/dates';
+import { href as withBase } from '../lib/url';
+
+interface Props {
+  recording: {
+    title: string;
+    date?: string;
+    caption?: string;
+    kind?: 'audio' | 'video';
+    src?: string;
+    href?: string;
+    published?: boolean;
+  };
+}
+const { recording: r } = Astro.props;
+const show = r.published !== false && (r.src || r.href);
+---
+
+{
+  show && (
+    <article class="recording">
+      <div class="recording__head">
+        {r.date && <span class="mono">{formatDate(r.date)}</span>}
+        <h3 class="recording__title">{r.title}</h3>
+        {r.caption && <p class="recording__caption" set:html={mdInline(r.caption)} />}
+      </div>
+      {r.src && r.kind !== 'video' && (
+        <audio controls preload="none" src={withBase(r.src)}>
+          <a href={withBase(r.src)}>Download the recording</a>
+        </audio>
+      )}
+      {r.src && r.kind === 'video' && <video controls preload="metadata" src={withBase(r.src)} />}
+      {!r.src && r.href && (
+        <p class="recording__link">
+          <a href={r.href} target="_blank" rel="noopener">
+            {r.kind === 'video' ? 'Watch' : 'Listen'}
+          </a>
+        </p>
+      )}
+    </article>
+  )
+}
+
+<style>
+  .recording {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--line);
+  }
+  .recording__head {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .recording__title {
+    font-size: var(--text-h4);
+    margin: 0;
+  }
+  .recording__caption {
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .recording audio,
+  .recording video {
+    width: 100%;
+    max-width: 34rem;
+  }
+  .recording__link {
+    margin: 0;
+    font-family: var(--font-head);
+    font-weight: 600;
+  }
+</style>

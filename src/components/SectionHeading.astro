@@ -1,4 +1,6 @@
 ---
+import Prose from './Prose.astro';
+
 interface Props {
   eyebrow?: string;
   title: string;
@@ -6,13 +8,13 @@ interface Props {
   intro?: string;
   id?: string;
   align?: 'left' | 'split';
+  tone?: 'light' | 'dark';
 }
-import Prose from './Prose.astro';
-const { eyebrow, title, level = 2, intro, id, align = 'left' } = Astro.props;
+const { eyebrow, title, level = 2, intro, id, align = 'left', tone = 'light' } = Astro.props;
 const Tag = `h${level}` as 'h2' | 'h3';
 ---
 
-<div class:list={['section-heading', `section-heading--${align}`]}>
+<div class:list={['section-heading', `section-heading--${align}`, `section-heading--${tone}`]}>
   <div>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <Tag id={id} class="section-heading__title">{title}</Tag>
@@ -30,10 +32,13 @@ const Tag = `h${level}` as 'h2' | 'h3';
   .section-heading :global(.section-heading__intro) {
     margin-top: var(--space-4);
   }
+  .section-heading--dark :global(.section-heading__intro) {
+    color: var(--on-navy-2);
+  }
   @media (min-width: 60em) {
     .section-heading--split {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.1fr 1fr;
       gap: var(--space-6);
       align-items: end;
     }

@@ -28,6 +28,7 @@ the long side and under 5 MB so the build stays quick.
 | `music/`        | Performance photographs                                     |
 | `events/`       | Competition and speaking photographs                        |
 | `certificates/` | Scans or photographs of certificates                        |
+| `marks/`        | The handwritten "Messi" mark (transparent PNG)              |
 
 ## Image fields
 
@@ -35,7 +36,10 @@ the long side and under 5 MB so the build stays quick.
 | ------------- | ------------------------------------------------------------------------------- |
 | `src`         | Path inside this folder. Leave empty (`''`) to show a placeholder frame.        |
 | `alt`         | A short description of what is in the picture, for screen readers and search.  |
-| `caption`     | Optional caption shown under the image. Simple Markdown works.                  |
+| `caption`     | Caption under the image: the occasion and your part in it. Simple Markdown works. |
+| `label`       | Small corner label, e.g. `Fig. 1`.                                              |
+| `annotation`  | One-line monospace note shown above the caption, e.g. `Kasetsart, 2026`.        |
+| `frame`       | `none` (default), `phone` (device bezel for screenshots), or `paper` (document edge). |
 | `position`    | Which part of the photo to keep when it is cropped: `50% 50%` is the centre, `50% 20%` keeps the top. |
 | `ratio`       | Optional frame shape: `1/1`, `4/5`, `3/4`, `2/3`, `4/3`, `3/2`, `16/9`, `21/9`, `9/16`, `210/297`. |
 | `placeholder` | Label shown in the empty frame, e.g. "Laboratory photograph".                   |

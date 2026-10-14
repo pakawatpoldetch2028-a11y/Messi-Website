@@ -6,22 +6,37 @@ metaDescription: >-
   Pakawat (Messi) Poldetch, a Grade 11 student in Bangkok interested in how
   complex systems work and how understanding them can become useful.
 
-hero:
+opening:
   eyebrow: Grade 11 · Ruamrudee International School · Bangkok · Class of 2028
-  heading: Understanding complexity. Making knowledge useful.
+  theme: Understanding complexity. Making knowledge useful.
   intro: |
-    I'm Pakawat, usually called Messi, a student in Bangkok interested in how
-    complex systems work, and in how understanding them can become useful. My
-    work ranges from aquaculture research and a decision-support tool for shrimp
-    farmers to neuroscience, economics, and a developing healthcare project.
-    History, philosophy, and music give me other ways to think about
-    relationships, decisions, and meaning.
+    I'm a student in Bangkok interested in how complex systems work, and in how
+    understanding them can become useful. My work runs from aquaculture
+    research and a decision-support tool for shrimp farmers to neuroscience,
+    economics, and a developing healthcare project. History, philosophy, and
+    music give me other ways to think about relationships, decisions, and
+    meaning.
   portrait:
     src: portraits/messi-portrait.jpg
     alt: Pakawat (Messi) Poldetch, smiling, in a white Ruamrudee International School polo shirt.
     position: 50% 30%
     ratio: '4/5'
     placeholder: Portrait
+  # Two optional candid photographs: laboratory work, a performance, a
+  # presentation, project testing. The layout stays balanced while empty.
+  candids:
+    - src: ''
+      alt: ''
+      caption: ''
+      annotation: ''
+      ratio: '4/3'
+      placeholder: Candid photograph
+    - src: ''
+      alt: ''
+      caption: ''
+      annotation: ''
+      ratio: '1/1'
+      placeholder: Candid photograph
   primary:
     label: Explore my work
     href: /work
@@ -29,47 +44,50 @@ hero:
     label: About me
     href: /about
 
-threads:
-  heading: Three threads, one question
-  intro: >-
-    Most of what I do fits one of three habits. Together they ask how
-    understanding a system can help us make better decisions within it.
-  items:
-    - title: Investigating biological systems
-      body: >-
-        With the Faculty of Fisheries at Kasetsart University, I have
-        contributed to studies of shrimp health and nutrition, and I am now
-        working on questions about antibiotics and antimicrobial resistance in
-        aquaculture. In neuroscience, I studied how the wiring of a single
-        neuron in the fly visual system relates to what it does.
-      href: /work/aquaculture-research
-      linkLabel: Aquaculture research
-    - title: Building tools that make knowledge usable
-      body: >-
-        ShrimpPulse turns specialised knowledge about disease, water quality,
-        and the responsible use of antimicrobials into answers a farmer can act
-        on. Telesync, a telemedicine project I contribute to, aims to bring
-        care closer to patients and providers in rural Thailand.
-      href: /work/shrimppulse
-      linkLabel: ShrimpPulse
-    - title: Exploring the human context of decisions
-      body: >-
-        Economics taught me to ask about incentives and trade-offs. History and
-        philosophy ask harder questions: which institutions shape outcomes,
-        what follows from a decision, and what we ought to value. I compete in
-        all three, and they change how I think about the work above.
-      href: /beyond
-      linkLabel: Beyond the lab
-
 featured:
-  heading: Selected work
-  intro: >-
-    Three projects that show the range: a research question, a tool built from
-    research, and a tool built for people.
-  projects:
-    - shrimppulse
+  eyebrow: Research & projects
+  lead: shrimppulse
+  leadNote: >-
+    Built from what I learned in aquaculture research. Publicly released;
+    version 4.0 in development.
+  others:
     - neuroscience
     - telesync
+
+connections:
+  heading: How the pieces connect
+  intro: >-
+    One question runs under most of this: how can understanding a system help
+    us make better decisions within it? Select a topic to see what it links to.
+
+# A photographic preview of music, speaking, and competitions. Paths can
+# repeat photographs used on the Ideas & Expression page.
+preview:
+  heading: Ideas & expression
+  intro: >-
+    Classical guitar and clarinet, public speaking, and competitions in
+    economics, philosophy, and history.
+  href: /beyond
+  linkLabel: See the page
+  images:
+    - src: ''
+      alt: ''
+      caption: ''
+      annotation: Music
+      ratio: '3/2'
+      placeholder: Performance photograph
+    - src: ''
+      alt: ''
+      caption: ''
+      annotation: Speaking
+      ratio: '4/5'
+      placeholder: Speaking photograph
+    - src: ''
+      alt: ''
+      caption: ''
+      annotation: Competitions
+      ratio: '1/1'
+      placeholder: Competition photograph
 
 milestones:
   heading: A few milestones
@@ -79,14 +97,3 @@ milestones:
     - flycomp-2025-winner
     - ipo-2025-honourable-mention
     - iho-2025
-
-question:
-  quote: How can understanding a system help us make better decisions within it?
-  body: |
-    This question runs under most of what I do. A shrimp pond, a fly's visual
-    circuit, a market, and a rural clinic are all made of parts whose
-    relationships matter more than any single piece. I want to understand those
-    relationships well enough to act on them, and to know the limits of that
-    understanding when I do.
-  href: /about
-  linkLabel: More about how I think

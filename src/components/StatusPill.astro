@@ -6,7 +6,7 @@ interface Props {
 const { label, tone = 'active' } = Astro.props;
 ---
 
-<span class:list={['pill', `pill--${tone}`, 'sans']}>
+<span class:list={['pill', `pill--${tone}`]}>
   <span class="pill__dot" aria-hidden="true"></span>
   {label}
 </span>
@@ -16,26 +16,29 @@ const { label, tone = 'active' } = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    font-size: 0.74rem;
-    font-weight: 540;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
     letter-spacing: 0.04em;
     color: var(--ink-2);
-    padding: 0.3rem 0.7rem 0.3rem 0.6rem;
+    padding: 0.32rem 0.7rem 0.32rem 0.6rem;
     border: 1px solid var(--line);
     border-radius: 999px;
-    background: var(--paper);
-    white-space: nowrap;
+    background: var(--bg);
+    line-height: 1.35;
+    text-align: left;
   }
   .pill__dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--teal);
+    flex-shrink: 0;
   }
   .pill--complete .pill__dot {
     background: var(--ink-3);
   }
   .pill--planned .pill__dot {
-    background: var(--accent-2);
+    background: var(--orange);
   }
 </style>

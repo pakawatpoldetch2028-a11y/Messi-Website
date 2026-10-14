@@ -1,8 +1,5 @@
 ---
-/**
- * A compact list of links with small kind indicators. Unpublished links and
- * links without a destination are hidden.
- */
+/** A compact list of links with small kind indicators. Empty links are hidden. */
 import { href as withBase, isExternal } from '../lib/url';
 
 interface Props {
@@ -32,7 +29,7 @@ const icons: Record<string, string> = {
           return (
             <li>
               <a
-                class="linklist__link sans"
+                class="linklist__link"
                 href={withBase(l.href)}
                 target={external ? '_blank' : undefined}
                 rel={external ? 'noopener' : undefined}
@@ -55,18 +52,20 @@ const icons: Record<string, string> = {
   .linklist__list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.55rem;
   }
   .linklist__link {
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
-    font-size: 0.9rem;
+    font-family: var(--font-head);
+    font-size: 0.92rem;
+    font-weight: 600;
     color: var(--ink);
     text-decoration: none;
   }
   .linklist__link svg {
-    color: var(--accent);
+    color: var(--cobalt);
     flex-shrink: 0;
   }
   .linklist__link span {
@@ -74,6 +73,6 @@ const icons: Record<string, string> = {
     transition: border-color var(--dur) var(--ease);
   }
   .linklist__link:hover span {
-    border-color: var(--accent);
+    border-color: var(--cobalt);
   }
 </style>

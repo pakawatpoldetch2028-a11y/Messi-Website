@@ -1,5 +1,6 @@
 # ---------------------------------------------------------------------------
 # Case study: Telesync
+# layout: device  (device and application side by side, pilot status)
 # ---------------------------------------------------------------------------
 
 title: Telesync
@@ -10,9 +11,11 @@ summary: >-
   Thailand. Now in pilot testing with healthcare providers.
 order: 4
 published: true
+layout: device
 status:
   label: Pilot testing with healthcare providers
   tone: active
+  note: Benefits described here are intended; there are no clinical outcome results yet.
 role: Contributor
 
 card:
@@ -21,12 +24,25 @@ card:
   ratio: '4/3'
   placeholder: Telesync device
 
+# The device photograph.
 hero:
   src: ''
   alt: ''
   caption: ''
-  ratio: '16/9'
-  placeholder: Telesync device and application
+  annotation: ''
+  label: Device
+  ratio: '4/3'
+  placeholder: Device photograph
+
+# The application, shown in a phone frame beside the device.
+figure:
+  src: ''
+  alt: ''
+  caption: ''
+  annotation: ''
+  label: Application
+  frame: phone
+  placeholder: Application screens
 
 intro: |
   Telesync combines a physical telemedical device with an application that
@@ -74,27 +90,14 @@ steps:
       would depend on it? Pilot testing will show whether providers find it
       reliable and worth their time. That answer matters more than any feature.
 
-galleries:
-  - heading: Device and application
-    columns: 2
-    images:
-      - src: ''
-        alt: ''
-        caption: ''
-        ratio: '4/3'
-        placeholder: Telesync device
-      - src: ''
-        alt: ''
-        caption: ''
-        ratio: '9/16'
-        placeholder: Application screens
-
 # Optional demonstration video.
 video:
   title: Telesync demonstration
+  date: ''
   youtube: ''
   src: ''
   caption: ''
+  placeholder: Demonstration video
   published: true
 
 links: []
@@ -108,6 +111,5 @@ notes: |
   EDITING NOTES (never shown on the site)
   - Replace "Contributor" with your exact role once confirmed, and describe
     your technical responsibilities in the "My contribution" step.
-  - Add what the device measures and how the app is used, if that can be
-    public.
-  - Add device and app images to src/assets/images/telesync/.
+  - Device photograph: hero.src (src/assets/images/telesync/). App screens:
+    figure.src, ideally a tall phone screenshot.

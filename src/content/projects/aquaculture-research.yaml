@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------
 # Case study: aquaculture research and antimicrobial resistance
-# Steps follow: question -> approach -> my contribution -> evidence -> next
+# layout: research  (photograph + figure side by side, publications below)
 # ---------------------------------------------------------------------------
 
 title: Aquatic animal health and antimicrobial resistance
@@ -11,19 +11,35 @@ summary: >-
   resistance in aquaculture.
 order: 1
 published: true
+layout: research
 status:
   label: Ongoing research
   tone: active
+  note: Three co-authored publications; antimicrobial-resistance work in progress and unpublished.
 role: Student researcher and co-author
 affiliation: Faculty of Fisheries, Kasetsart University, Bangkok
-# period: "2025 – present"   # add when you want a date range shown
+# period: "2025 – present"
 
+# The main photograph: a laboratory bench or a pond.
 hero:
   src: ''
   alt: ''
   caption: ''
-  ratio: '16/9'
+  annotation: ''
+  label: Fig. 1
+  ratio: '3/2'
   placeholder: Laboratory or pond photograph
+
+# A research figure or poster, shown beside the photograph.
+figure:
+  src: ''
+  alt: ''
+  caption: ''
+  annotation: ''
+  label: Fig. 2
+  ratio: '4/5'
+  frame: paper
+  placeholder: Research figure or poster
 
 intro: |
   Shrimp farming supports a great many livelihoods in Thailand, and its largest
@@ -95,8 +111,8 @@ publications:
   - jfe-2025-porcine-plasma
 
 galleries:
-  - heading: From the laboratory and the field
-    description: Photographs, figures, and posters from this work will appear here.
+  - heading: More from the laboratory and the field
+    description: Further photographs, figures, and posters.
     columns: 3
     images:
       - src: ''
@@ -125,9 +141,8 @@ related:
 
 notes: |
   EDITING NOTES (never shown on the site)
-  - Add your specific part in each study (e.g. sample preparation, data
-    collection, analysis, writing) to the "My contribution" step once you
-    have confirmed it with your supervisor.
-  - Add a period (e.g. "2025 – present") when you want one shown.
-  - Replace the empty image slots with photographs: put files in
-    src/assets/images/research/ and set src: research/your-file.jpg
+  - Add your specific part in each study to `contribution` in
+    publications.yaml once confirmed with your supervisor.
+  - Fill the hero (photograph) and figure (poster/figure) slots from
+    src/assets/images/research/. Use `caption` for the occasion and your
+    involvement, `annotation` for a short monospace note.

@@ -4,97 +4,125 @@ import Base from '../layouts/Base.astro';
 import Figure from '../components/Figure.astro';
 import Prose from '../components/Prose.astro';
 import Button from '../components/Button.astro';
+import Mark from '../components/Mark.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import MilestoneItem from '../components/MilestoneItem.astro';
 import SectionHeading from '../components/SectionHeading.astro';
-import Ornament from '../components/Ornament.astro';
-import { getPublishedProjects, getPublishedMilestones, pickByIds } from '../lib/content';
+import Connections from '../components/Connections.astro';
+import { getSite, getPublishedProjects, getPublishedMilestones, pickByIds } from '../lib/content';
 import { href } from '../lib/url';
 
 const entry = await getEntry('home', 'home');
 if (!entry) throw new Error('src/content/home.yaml is missing');
 const home = entry.data;
+const site = await getSite();
 
-const projects = pickByIds(await getPublishedProjects(), home.featured.projects);
+const projects = await getPublishedProjects();
+const lead = pickByIds(projects, [home.featured.lead])[0];
+const others = pickByIds(projects, home.featured.others);
 const milestones = pickByIds(await getPublishedMilestones(), home.milestones.ids);
+const candids = home.opening.candids.filter((c) => c.published !== false);
+const previewImages = home.preview.images.filter((i) => i.published !== false);
 ---
 
 <Base title="Home" description={home.metaDescription} isHome>
-  <section class="hero">
-    <div class="wrap hero__grid">
-      <div class="hero__text">
-        <p class="eyebrow hero__eyebrow">{home.hero.eyebrow}</p>
-        <h1 class="hero__heading">{home.hero.heading}</h1>
-        <Prose text={home.hero.intro} lead class="hero__intro" />
-        <div class="hero__actions">
-          <Button href={home.hero.primary.href}>{home.hero.primary.label}</Button>
-          <Button href={home.hero.secondary.href} variant="secondary">{home.hero.secondary.label}</Button>
+  <!-- 1. Personal opening -->
+  <section class="opening">
+    <div class="wrap opening__grid">
+      <div class="opening__text">
+        <p class="eyebrow opening__eyebrow">{home.opening.eyebrow}</p>
+        <h1 class="opening__name">
+          <span class="opening__first">{site.firstName}</span>
+          <span class="opening__nick">“{site.nickname}”</span>
+          <span class="opening__last">{site.surname}</span>
+        </h1>
+        <p class="opening__theme">{home.opening.theme}</p>
+        <Prose text={home.opening.intro} lead class="opening__intro" />
+        <div class="opening__actions">
+          <Button href={home.opening.primary.href}>{home.opening.primary.label}</Button>
+          <Button href={home.opening.secondary.href} variant="secondary">{home.opening.secondary.label}</Button>
+        </div>
+        <div class="opening__sign">
+          <Mark size="md" />
+          <span class="mono">{site.location}</span>
         </div>
       </div>
-      <div class="hero__media">
-        <Ornament class="hero__ornament" variant="tall" />
-        <Figure
-          image={home.hero.portrait}
-          ratio="4/5"
-          variant="offset"
-          loading="eager"
-          sizes="(min-width: 60em) 24rem, (min-width: 48em) 40vw, 80vw"
-        />
+
+      <div class="opening__media">
+        <div class="opening__portrait">
+          <Figure
+            image={home.opening.portrait}
+            ratio="4/5"
+            loading="eager"
+            sizes="(min-width: 60em) 26rem, (min-width: 48em) 42vw, 86vw"
+          />
+        </div>
+        {
+          candids[0] && (
+            <div class="opening__candid opening__candid--a">
+              <Figure image={candids[0]} ratio="4/3" sizes="(min-width: 60em) 16rem, (min-width: 48em) 24vw, 45vw" />
+            </div>
+          )
+        }
+        {
+          candids[1] && (
+            <div class="opening__candid opening__candid--b">
+              <Figure image={candids[1]} ratio="1/1" sizes="(min-width: 60em) 11rem, (min-width: 48em) 18vw, 40vw" />
+            </div>
+          )
+        }
       </div>
     </div>
   </section>
 
-  <section class="section section--rule threads">
+  <!-- 2 & 3. Featured project and two smaller previews -->
+  <section class="section section--rule featured">
     <div class="wrap">
-      <SectionHeading title={home.threads.heading} intro={home.threads.intro} align="split" />
-      <ol class="plain-list threads__list">
+      <div class="featured__head">
+        <p class="eyebrow eyebrow--cobalt">{home.featured.eyebrow ?? 'Research & projects'}</p>
+        <Button href="/work" variant="link">All research and projects</Button>
+      </div>
+      {lead && <ProjectCard project={lead} variant="lead" note={home.featured.leadNote} eager index="01" />}
+      {
+        others.length > 0 && (
+          <div class="featured__others">
+            {others.map((p, i) => (
+              <ProjectCard project={p} variant="small" index={`0${i + 2}`} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 4. Connections between interests -->
+  <section class="section section--navy" id="connections">
+    <div class="wrap">
+      <Connections heading={home.connections.heading} intro={home.connections.intro} />
+    </div>
+  </section>
+
+  <!-- 5. Photographic preview of music, speaking, competitions -->
+  <section class="section preview">
+    <div class="wrap preview__grid">
+      <div class="preview__text">
+        <SectionHeading eyebrow="Ideas & expression" title={home.preview.heading} intro={home.preview.intro} />
+        {home.preview.href && <Button href={home.preview.href} variant="link">{home.preview.linkLabel ?? 'See the page'}</Button>}
+      </div>
+      <div class="preview__images">
         {
-          home.threads.items.map((item, i) => (
-            <li class="thread">
-              <span class="thread__index sans">0{i + 1}</span>
-              <h3 class="thread__title">{item.title}</h3>
-              <Prose text={item.body} muted class="thread__body" />
-              {item.href && (
-                <a class="thread__link sans" href={href(item.href)}>
-                  {item.linkLabel ?? 'Read more'}
-                  <span aria-hidden="true"> →</span>
-                </a>
-              )}
-            </li>
+          previewImages.map((img, i) => (
+            <div class:list={['preview__item', `preview__item--${i + 1}`]}>
+              <Figure image={img} ratio={img.ratio ?? '3/2'} sizes="(min-width: 60em) 22rem, (min-width: 48em) 30vw, 48vw" />
+            </div>
           ))
         }
-      </ol>
-    </div>
-  </section>
-
-  <section class="section section--tint featured">
-    <div class="wrap">
-      <SectionHeading eyebrow="Research & projects" title={home.featured.heading} intro={home.featured.intro} align="split" />
-      <div class="grid grid--3">
-        {projects.map((p, i) => <ProjectCard project={p} eager={i === 0} />)}
       </div>
-      <p class="featured__more">
-        <Button href="/work" variant="link">All research and projects</Button>
-      </p>
     </div>
   </section>
 
-  <section class="section question">
-    <div class="wrap question__grid">
-      <div class="question__art"><Ornament /></div>
-      <blockquote class="question__quote">
-        <p class="question__text">{home.question.quote}</p>
-        <Prose text={home.question.body} muted class="question__body" />
-        {home.question.href && (
-          <p>
-            <Button href={home.question.href} variant="link">{home.question.linkLabel ?? 'More'}</Button>
-          </p>
-        )}
-      </blockquote>
-    </div>
-  </section>
-
-  <section class="section section--rule milestones">
+  <!-- 6. Milestones -->
+  <section class="section section--tint milestones">
     <div class="wrap milestones__grid">
       <div class="milestones__head">
         <SectionHeading eyebrow="Milestones" title={home.milestones.heading} intro={home.milestones.intro} />
@@ -108,132 +136,158 @@ const milestones = pickByIds(await getPublishedMilestones(), home.milestones.ids
 </Base>
 
 <style>
-  .hero {
-    padding-block: clamp(2.5rem, 7vw, 6rem) var(--space-8);
+  /* Opening */
+  .opening {
+    padding-block: clamp(2.5rem, 6vw, 5rem) var(--space-8);
     overflow-x: clip;
   }
-  .hero__grid {
+  .opening__grid {
     display: grid;
     gap: var(--space-7);
     align-items: center;
   }
   @media (min-width: 48em) {
-    .hero__grid {
-      grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.85fr);
-      gap: clamp(2rem, 6vw, 5rem);
+    .opening__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.95fr);
+      gap: clamp(2rem, 5vw, 4.5rem);
     }
   }
-  .hero__eyebrow {
+  .opening__eyebrow {
     margin-bottom: var(--space-5);
   }
-  .hero__heading {
-    max-width: 14ch;
-    margin-bottom: var(--space-5);
+  .opening__name {
+    display: grid;
+    margin-bottom: var(--space-4);
   }
-  .hero__text :global(.hero__intro) {
-    max-width: 52ch;
+  .opening__nick {
+    color: var(--cobalt-ink);
   }
-  .hero__actions {
+  .opening__theme {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: var(--text-h4);
+    letter-spacing: -0.01em;
+    color: var(--teal);
+    margin: 0 0 var(--space-4);
+  }
+  .opening__text :global(.opening__intro) {
+    max-width: 50ch;
+  }
+  .opening__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-6);
   }
-  .hero__media {
+  .opening__sign {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .opening__media {
     position: relative;
-    max-width: 26rem;
-    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto auto;
+    gap: var(--space-4);
     width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
   }
   @media (min-width: 48em) {
-    .hero__media {
-      margin-inline: 0 0;
+    .opening__media {
+      margin-inline: 0;
       justify-self: end;
     }
   }
-  .hero__media :global(.hero__ornament) {
-    position: absolute;
-    right: -12%;
-    top: -10%;
-    width: 28%;
-    z-index: -1;
-    opacity: 0.3;
+  .opening__portrait {
+    grid-column: 1 / 5;
+    grid-row: 1 / 3;
+  }
+  .opening__candid--a {
+    grid-column: 5 / 7;
+    grid-row: 1;
+    align-self: end;
+  }
+  .opening__candid--b {
+    grid-column: 5 / 7;
+    grid-row: 2;
+    align-self: start;
+    max-width: 85%;
   }
 
-  .threads__list {
+  /* Featured */
+  .featured__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .featured__head .eyebrow {
+    margin: 0;
+  }
+  .featured__others {
     display: grid;
     gap: var(--space-6);
+    margin-top: var(--space-8);
+    padding-top: var(--space-7);
+    border-top: 1px solid var(--line);
   }
   @media (min-width: 48em) {
-    .threads__list {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-6);
+    .featured__others {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
     }
   }
-  .thread {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line-strong);
-  }
-  .thread__index {
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-  }
-  .thread__title {
-    font-size: var(--step-2);
-    margin: 0;
-    max-width: 16ch;
-  }
-  .thread :global(.thread__body) {
-    font-size: 0.98rem;
-  }
-  .thread__link {
-    font-size: 0.86rem;
-    font-weight: 540;
-    color: var(--ink);
-    text-decoration: none;
-    margin-top: auto;
-    padding-top: var(--space-2);
-  }
-  .thread__link:hover {
-    color: var(--accent-ink);
-  }
 
-  .featured__more {
-    margin-top: var(--space-6);
-  }
-
-  .question__grid {
+  /* Preview */
+  .preview__grid {
     display: grid;
     gap: var(--space-6);
-    align-items: center;
   }
   @media (min-width: 60em) {
-    .question__grid {
-      grid-template-columns: 1fr 1.4fr;
+    .preview__grid {
+      grid-template-columns: minmax(14rem, 1fr) 2.2fr;
+      gap: var(--space-8);
+      align-items: start;
     }
   }
-  .question__art {
-    max-width: 24rem;
+  .preview__images {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-4);
+    align-items: end;
   }
-  .question__text {
-    font-size: var(--step-3);
-    font-style: italic;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    max-width: 22ch;
-    margin-bottom: var(--space-5);
-    text-wrap: balance;
+  .preview__item--1 {
+    grid-column: 1 / 5;
   }
-  .question__quote :global(.question__body) {
-    max-width: 54ch;
-    margin-bottom: var(--space-4);
+  .preview__item--2 {
+    grid-column: 5 / 7;
+  }
+  .preview__item--3 {
+    grid-column: 2 / 4;
+    margin-top: calc(-1 * var(--space-2));
+  }
+  @media (max-width: 47.99em) {
+    .preview__item--1 {
+      grid-column: 1 / 7;
+    }
+    .preview__item--2 {
+      grid-column: 1 / 4;
+    }
+    .preview__item--3 {
+      grid-column: 4 / 7;
+      margin-top: 0;
+    }
   }
 
+  /* Milestones */
   .milestones__grid {
     display: grid;
     gap: var(--space-6);

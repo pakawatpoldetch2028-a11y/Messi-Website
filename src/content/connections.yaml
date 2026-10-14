@@ -1,0 +1,150 @@
+# ---------------------------------------------------------------------------
+# Connections diagram (home page)
+#
+# nodes: the things that can be selected. x/y place them in the diagram
+#        (percent of width and height). kind: research | tool | idea
+# edges: a real relationship between two nodes, with a short explanation.
+#        `note` is for your own interpretation; it is shown only when filled in.
+# ---------------------------------------------------------------------------
+
+prompt: Select a topic to see how it connects to the others.
+
+nodes:
+  - id: aquaculture
+    label: Aquaculture research
+    short: Aquaculture
+    kind: research
+    href: /work/aquaculture-research
+    linkLabel: Read the case study
+    blurb: >-
+      Shrimp health and nutrition studies with the Faculty of Fisheries at
+      Kasetsart University, now extending into antibiotics and antimicrobial
+      resistance.
+    x: 18
+    y: 30
+  - id: shrimppulse
+    label: ShrimpPulse
+    kind: tool
+    href: /work/shrimppulse
+    linkLabel: Read the case study
+    blurb: >-
+      A chatbot that gives Thai shrimp farmers practical answers about disease,
+      water quality, biosecurity, nutrition, and the appropriate use of
+      antimicrobials.
+    x: 42
+    y: 62
+  - id: flycomp
+    label: Fly connectomics
+    short: Fly connectome
+    kind: research
+    href: /work/neuroscience
+    linkLabel: Read the case study
+    blurb: >-
+      A report on the H1 neuron and the fly visual system, asking what a
+      neuron's wiring can tell us about what it does.
+    x: 72
+    y: 22
+  - id: fmri
+    label: Human neuroscience
+    short: Human fMRI
+    kind: research
+    href: /work/neuroscience#human-fmri
+    linkLabel: See the current work
+    blurb: >-
+      Continuing neuroscience research with human fMRI data through the
+      expanded Connectome Research Competition, alongside preparation for the
+      International Neuroscience Olympiad. Ongoing, not yet complete.
+    x: 88
+    y: 55
+  - id: telesync
+    label: Telesync
+    kind: tool
+    href: /work/telesync
+    linkLabel: Read the case study
+    blurb: >-
+      A telemedical device and application intended to make healthcare easier
+      to reach, including in rural Thailand. In pilot testing with healthcare
+      providers.
+    x: 66
+    y: 78
+  - id: economics
+    label: Economics
+    kind: idea
+    href: /beyond#economics
+    linkLabel: Economics, in Ideas & Expression
+    blurb: >-
+      Incentives, trade-offs, and policy. Economics olympiads, and a current
+      interest in climate economics and carbon-border policy.
+    x: 30
+    y: 88
+  - id: institutions
+    label: History & philosophy
+    short: History & philosophy
+    kind: idea
+    href: /beyond#history-philosophy
+    linkLabel: History and philosophy, in Ideas & Expression
+    blurb: >-
+      Institutions, interpretation, and what we should value. How systems
+      came to be set up, what their decisions caused, and how we can know.
+    x: 12
+    y: 66
+
+edges:
+  - from: aquaculture
+    to: shrimppulse
+    explanation: >-
+      The nutrition and disease questions studied in the laboratory become the
+      knowledge ShrimpPulse hands to farmers in plain language.
+    note: ''
+    href: /work/shrimppulse
+    linkLabel: How the research became a tool
+  - from: aquaculture
+    to: economics
+    explanation: >-
+      Antibiotic overuse in aquaculture is partly an incentive problem: a
+      treatment that is cheap and fast today can create resistance that is
+      expensive for everyone later.
+    note: ''
+    href: /work/aquaculture-research
+    linkLabel: Aquaculture research
+  - from: flycomp
+    to: fmri
+    explanation: >-
+      The same structure-and-function question at a different scale: from one
+      neuron's wiring in a fly to whole-brain scans of people.
+    note: ''
+    href: /work/neuroscience#human-fmri
+    linkLabel: The current human fMRI work
+  - from: shrimppulse
+    to: telesync
+    explanation: >-
+      Two tools with the same aim: close the gap between what is known and the
+      person who needs it, whether a farmer at a pond or a patient far from a
+      hospital.
+    note: ''
+    href: /work/telesync
+    linkLabel: Telesync
+  - from: shrimppulse
+    to: economics
+    explanation: >-
+      Whether a farmer acts on advice is a question about incentives and trust
+      as much as about biology.
+    note: ''
+    href: /beyond#economics
+    linkLabel: Economics
+  - from: telesync
+    to: institutions
+    explanation: >-
+      Accessibility depends on institutions as much as on devices: who pays,
+      who is trusted, and how a clinic is organised.
+    note: ''
+    href: /beyond#history-philosophy
+    linkLabel: History and philosophy
+  - from: economics
+    to: institutions
+    explanation: >-
+      Economics asks what a system rewards; history and philosophy ask how it
+      came to be that way and what it should be for.
+    note: ''
+    href: /beyond
+    linkLabel: Ideas & Expression

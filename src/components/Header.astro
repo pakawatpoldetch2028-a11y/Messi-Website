@@ -9,19 +9,12 @@ const path = Astro.url.pathname;
 <header class="site-header">
   <div class="wrap bar">
     <a class="wordmark" href={href('/')} aria-label={`${site.name}, home`}>
-      <span class="wordmark__name">{site.shortName}</span>
-      <span class="wordmark__sub sans">{site.nickname}</span>
+      <span class="wordmark__name">{site.firstName} <em>{site.nickname}</em> {site.surname}</span>
     </a>
 
-    <button
-      class="menu-toggle sans"
-      type="button"
-      aria-expanded="false"
-      aria-controls="site-nav"
-      data-menu-toggle
-    >
-      <span class="menu-toggle__label" data-label-closed>Menu</span>
-      <span class="menu-toggle__label" data-label-open hidden>Close</span>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+      <span data-label-closed>Menu</span>
+      <span data-label-open hidden>Close</span>
       <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span></span>
     </button>
 
@@ -30,11 +23,7 @@ const path = Astro.url.pathname;
         {
           site.nav.map((item) => (
             <li>
-              <a
-                class="nav__link sans"
-                href={href(item.href)}
-                aria-current={isCurrent(path, item.href) ? 'page' : undefined}
-              >
+              <a class="nav__link" href={href(item.href)} aria-current={isCurrent(path, item.href) ? 'page' : undefined}>
                 {item.label}
               </a>
             </li>
@@ -55,25 +44,17 @@ const path = Astro.url.pathname;
     if (!toggle || !nav) return;
     toggle.setAttribute('aria-expanded', String(open));
     nav.classList.toggle('is-open', open);
-    document.documentElement.classList.toggle('nav-open', open);
     if (labelClosed) labelClosed.hidden = open;
     if (labelOpen) labelOpen.hidden = !open;
   }
-
-  toggle?.addEventListener('click', () => {
-    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-  });
-
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
       setOpen(false);
       toggle.focus();
     }
   });
-
-  // Close the menu if the viewport grows past the mobile breakpoint.
-  const mq = window.matchMedia('(min-width: 48em)');
-  mq.addEventListener('change', (e) => {
+  window.matchMedia('(min-width: 52em)').addEventListener('change', (e) => {
     if (e.matches) setOpen(false);
   });
 </script>
@@ -83,12 +64,11 @@ const path = Astro.url.pathname;
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in oklab, var(--paper) 88%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: color-mix(in oklab, var(--bg) 86%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
   }
-
   .bar {
     display: flex;
     align-items: center;
@@ -97,39 +77,33 @@ const path = Astro.url.pathname;
     min-height: 4.25rem;
     flex-wrap: wrap;
   }
-
   .wordmark {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
     text-decoration: none;
     color: var(--ink);
   }
   .wordmark__name {
-    font-family: var(--font-serif);
-    font-size: 1.35rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: var(--font-head);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
-  .wordmark__sub {
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-3);
+  .wordmark__name em {
+    font-style: normal;
+    color: var(--cobalt-ink);
   }
-
   .nav__list {
     display: flex;
-    gap: clamp(1rem, 2.5vw, 2rem);
+    gap: clamp(0.9rem, 2.2vw, 1.9rem);
   }
   .nav__link {
     display: inline-block;
     padding: 0.5rem 0;
-    font-size: 0.92rem;
-    font-weight: 500;
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    font-weight: 600;
     color: var(--ink-2);
     text-decoration: none;
-    border-bottom: 1.5px solid transparent;
+    border-bottom: 2px solid transparent;
     transition:
       color var(--dur) var(--ease),
       border-color var(--dur) var(--ease);
@@ -139,9 +113,8 @@ const path = Astro.url.pathname;
   }
   .nav__link[aria-current='page'] {
     color: var(--ink);
-    border-color: var(--accent);
+    border-color: var(--cobalt);
   }
-
   .menu-toggle {
     display: none;
     align-items: center;
@@ -150,9 +123,10 @@ const path = Astro.url.pathname;
     border: 1px solid var(--line-strong);
     color: var(--ink);
     border-radius: 999px;
-    padding: 0.45rem 0.9rem;
+    padding: 0.45rem 0.95rem;
+    font-family: var(--font-head);
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer;
   }
   .menu-toggle__icon {
@@ -163,18 +137,17 @@ const path = Astro.url.pathname;
   }
   .menu-toggle__icon span {
     display: block;
-    height: 1.5px;
+    height: 2px;
     background: currentColor;
     transition: transform var(--dur) var(--ease);
   }
   .menu-toggle[aria-expanded='true'] .menu-toggle__icon span:first-child {
-    transform: translateY(2.75px) rotate(45deg);
+    transform: translateY(3px) rotate(45deg);
   }
   .menu-toggle[aria-expanded='true'] .menu-toggle__icon span:last-child {
-    transform: translateY(-2.75px) rotate(-45deg);
+    transform: translateY(-3px) rotate(-45deg);
   }
-
-  @media (max-width: 47.99em) {
+  @media (max-width: 51.99em) {
     .menu-toggle {
       display: inline-flex;
     }
@@ -194,13 +167,13 @@ const path = Astro.url.pathname;
     }
     .nav__link {
       display: block;
-      padding: 0.8rem 0;
+      padding: 0.85rem 0;
       font-size: 1.05rem;
       border-bottom: 1px solid var(--line);
     }
     .nav__link[aria-current='page'] {
       border-bottom-color: var(--line);
-      color: var(--accent-ink);
+      color: var(--cobalt-ink);
     }
   }
 </style>

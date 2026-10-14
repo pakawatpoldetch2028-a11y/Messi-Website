@@ -6,9 +6,17 @@ interface Props {
   text?: string;
   lead?: boolean;
   muted?: boolean;
+  small?: boolean;
   class?: string;
 }
-const { text, lead = false, muted = false, class: className } = Astro.props;
+const { text, lead = false, muted = false, small = false, class: className } = Astro.props;
 ---
 
-{text && <div class:list={['prose', { 'prose--lead': lead, 'prose--muted': muted }, className]} set:html={md(text)} />}
+{
+  text && (
+    <div
+      class:list={['prose', { 'prose--lead': lead, 'prose--muted': muted, 'prose--small': small }, className]}
+      set:html={md(text)}
+    />
+  )
+}

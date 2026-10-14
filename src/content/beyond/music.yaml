@@ -1,15 +1,12 @@
-# Beyond the Lab: music
+# Ideas & Expression: music
 title: Music
 lede: Classical guitar and clarinet
 order: 3
 published: true
 body: |
-  I play classical guitar and clarinet, and have studied both for many years. I
-  have completed Trinity Grade 8 in classical guitar and ABRSM Grade 6 in
-  clarinet. Practising and performing are a regular part of my week.
-
-  I keep music separate from the rest of what I do. It is not research, it is
-  not preparation for anything, and I like it that way.
+  I play classical guitar and clarinet. I have completed Trinity College
+  London Grade 8 in classical guitar and ABRSM Grade 6 in clarinet, and
+  practising and performing are a regular part of my week.
 highlights:
   - label: Classical guitar
     detail: Trinity College London, Grade 8
@@ -17,34 +14,51 @@ highlights:
   - label: Clarinet in B♭
     detail: ABRSM, Grade 6
     href: /milestones#abrsm-clarinet-grade-6
-galleryColumns: 3
+# One larger performance photograph, then a row of smaller ones.
+featureImage:
+  src: ''
+  alt: ''
+  caption: ''
+  annotation: ''
+  ratio: '16/10'
+  placeholder: Performance photograph
 gallery:
   - src: ''
     alt: ''
     caption: ''
-    ratio: '3/2'
-    placeholder: Performance photograph
+    annotation: ''
+    ratio: '4/5'
+    placeholder: Guitar performance
   - src: ''
     alt: ''
     caption: ''
-    ratio: '3/2'
-    placeholder: Performance photograph
+    annotation: ''
+    ratio: '4/5'
+    placeholder: Clarinet performance
   - src: ''
     alt: ''
     caption: ''
-    ratio: '3/2'
-    placeholder: Performance photograph
-# Optional recordings. Put audio files in public/files/ and use src, or link
-# to YouTube or SoundCloud with href. Entries without src or href are hidden.
+    annotation: ''
+    ratio: '4/5'
+    placeholder: Rehearsal or ensemble
+galleryHeading: Performances
+# Recordings. Put audio in public/files and set `src`, or link with `href`.
+# Entries without a source are hidden; the slot label below shows instead.
+recordingsHeading: Recordings
+recordingsPlaceholder: Recordings
 recordings: []
-# Example:
-#  - title: Bach, Prelude from Cello Suite No. 1 (guitar arrangement)
-#    kind: audio
-#    src: /files/bach-prelude.mp3
-#    note: Recorded at a school recital, 2026
+# recordings:
+#   - title: Bach, Prelude from Cello Suite No. 1 (guitar arrangement)
+#     date: 2026-05
+#     caption: School recital; solo guitar.
+#     kind: audio
+#     src: /files/bach-prelude.mp3
+# Your own account of what playing and performing mean to you.
 reflection:
-  title: On playing
+  title: What playing means to me
+  date: ''
   body: ''
+  placeholder: Personal reflection on playing and performing
 notes: |
   Add performance photographs to src/assets/images/music/ and set src on the
-  gallery entries above (e.g. music/recital-2026.jpg).
+  feature image and gallery entries above.

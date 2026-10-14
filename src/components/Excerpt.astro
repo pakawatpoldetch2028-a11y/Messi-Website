@@ -1,0 +1,116 @@
+---
+/**
+ * A short excerpt from a report or essay, with title, date, attribution and an
+ * optional link to the full document. Without text it shows a labelled slot.
+ */
+import { md } from '../lib/markdown';
+import { formatDate } from '../lib/dates';
+import { href as withBase, isExternal } from '../lib/url';
+import { getSite } from '../lib/content';
+
+interface Props {
+  excerpt: {
+    title: string;
+    date?: string;
+    attribution?: string;
+    text?: string;
+    href?: string;
+    hrefLabel?: string;
+    placeholder?: string;
+    published?: boolean;
+  };
+}
+const { excerpt } = Astro.props;
+const site = await getSite();
+const hasText = Boolean(excerpt.text?.trim());
+const external = excerpt.href ? isExternal(excerpt.href) : false;
+---
+
+{
+  excerpt.published !== false && (
+    <article class:list={['excerpt', { 'excerpt--empty': !hasText }]}>
+      <header class="excerpt__head">
+        <span class="mono">
+          {excerpt.date && formatDate(excerpt.date)}
+          {excerpt.date && excerpt.attribution && ' · '}
+          {excerpt.attribution}
+        </span>
+        <h3 class="excerpt__title">{excerpt.title}</h3>
+      </header>
+      {hasText ? (
+        <blockquote class="excerpt__text" set:html={md(excerpt.text)} />
+      ) : (
+        <div class="excerpt__slot" aria-label={`Placeholder: ${excerpt.placeholder ?? 'Excerpt'}`}>
+          <span class="excerpt__rule" />
+          <span class="excerpt__rule excerpt__rule--short" />
+          <span class="excerpt__rule" />
+          {site.showPlaceholderLabels && <span class="excerpt__label">{excerpt.placeholder ?? 'Excerpt'}</span>}
+        </div>
+      )}
+      {excerpt.href && (
+        <p class="excerpt__link">
+          <a href={withBase(excerpt.href)} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+            {excerpt.hrefLabel ?? 'Read the full document'}
+          </a>
+        </p>
+      )}
+    </article>
+  )
+}
+
+<style>
+  .excerpt {
+    position: relative;
+    padding: var(--space-5) var(--space-5) var(--space-5) calc(var(--space-5) + 0.75rem);
+    border-left: 3px solid var(--cobalt);
+    background: var(--bg-2);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  }
+  .excerpt__head {
+    display: grid;
+    gap: 0.3rem;
+    margin-bottom: var(--space-4);
+  }
+  .excerpt__title {
+    font-size: var(--text-h4);
+    margin: 0;
+  }
+  .excerpt__text {
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .excerpt__text :global(p) {
+    margin-bottom: 0.8em;
+  }
+  .excerpt__text :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .excerpt__slot {
+    display: grid;
+    gap: 0.7rem;
+    padding: 0.4rem 0;
+  }
+  .excerpt__rule {
+    display: block;
+    height: 1px;
+    background: var(--line-strong);
+    opacity: 0.8;
+  }
+  .excerpt__rule--short {
+    width: 70%;
+  }
+  .excerpt__label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .excerpt__link {
+    margin: var(--space-4) 0 0;
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+</style>

@@ -11,8 +11,6 @@ const groups = milestoneGroups
   .map((key) => ({ key, label: milestoneGroupLabels[key] ?? key, items: milestones.filter((m) => m.data.group === key) }))
   .filter((g) => g.items.length > 0);
 
-// Certificates and event photographs attached to milestones, for the gallery
-// at the bottom of the page.
 const attachments = milestones
   .filter((m) => m.data.image && m.data.image.published !== false)
   .map((m) => ({
@@ -29,17 +27,17 @@ const description =
   <section class="page-head">
     <div class="wrap page-head__grid">
       <div>
-        <p class="eyebrow">Milestones</p>
+        <p class="eyebrow eyebrow--cobalt">Milestones</p>
         <h1>A dated record</h1>
       </div>
       <div class="page-head__intro prose prose--lead">
         <p>
-          High-school accomplishments, grouped by discipline. Where a milestone belongs to a
-          project or an interest described elsewhere on this site, it links there, because the
-          work matters more than the list.
+          High-school accomplishments, grouped by discipline. Where a milestone belongs to a project
+          or an interest described elsewhere on this site, it links there, because the work matters
+          more than the list.
         </p>
       </div>
-      <nav class="jump sans" aria-label="Groups on this page">
+      <nav class="jump page-head__jump" aria-label="Groups on this page">
         {groups.map((g) => <a href={`#${g.key}`}>{g.label}</a>)}
       </nav>
     </div>
@@ -67,7 +65,7 @@ const description =
           <SectionHeading
             eyebrow="Documents"
             title="Selected certificates and photographs"
-            intro="A small selection; the full record above speaks for itself."
+            intro="A small selection; the record above speaks for itself."
             align="split"
           />
           <Gallery images={attachments} columns={4} ratio="4/3" />
@@ -78,49 +76,6 @@ const description =
 </Base>
 
 <style>
-  .page-head {
-    padding-block: clamp(2.5rem, 6vw, 5rem) var(--space-7);
-  }
-  .page-head__grid {
-    display: grid;
-    gap: var(--space-5);
-    align-items: end;
-  }
-  @media (min-width: 60em) {
-    .page-head__grid {
-      grid-template-columns: 1fr 1.4fr;
-      gap: var(--space-5) var(--space-8);
-    }
-    .jump {
-      grid-column: 1 / -1;
-    }
-  }
-  .page-head h1 {
-    margin-bottom: 0;
-  }
-  .page-head__intro {
-    color: var(--ink-2);
-  }
-  .jump {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
-  }
-  .jump a {
-    font-size: 0.82rem;
-    padding: 0.35rem 0.8rem;
-    border: 1px solid var(--line-strong);
-    border-radius: 999px;
-    color: var(--ink-2);
-    text-decoration: none;
-  }
-  .jump a:hover {
-    border-color: var(--accent);
-    color: var(--ink);
-  }
-
   .group {
     padding-block: 0 var(--space-7);
   }
@@ -140,7 +95,7 @@ const description =
     }
   }
   .group__title {
-    font-size: var(--step-2);
+    font-size: var(--text-h3);
     padding-top: var(--space-5);
     border-top: 2px solid var(--ink);
   }

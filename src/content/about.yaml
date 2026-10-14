@@ -30,6 +30,36 @@ opening: |
   question of how we interpret what happened, and what we should value when we
   decide what to do next.
 
+# Dated entries for what you are working on now. Change `status` to
+# "archived" to retire an entry; set showArchived: true to keep showing them.
+currently:
+  heading: Currently exploring
+  intro: Ongoing work, as of the dates shown. Not finished results.
+  showArchived: false
+  items:
+    - title: Human fMRI and connectome research
+      date: 2026-10
+      body: >-
+        Continuing my neuroscience research in humans through the expanded
+        Connectome Research Competition, which now uses human fMRI data.
+      href: /work/neuroscience#human-fmri
+      hrefLabel: The neuroscience page
+      status: active
+    - title: ShrimpPulse 4.0 development
+      date: 2026-09
+      body: >-
+        Work on version 4.0 began in August 2026; a user feedback form launched
+        in September 2026.
+      href: /work/shrimppulse
+      hrefLabel: The ShrimpPulse case study
+      status: active
+    - title: International Neuroscience Olympiad preparation
+      date: 2026-10
+      body: >-
+        Preparing to compete in the International Neuroscience Olympiad this
+        year.
+      status: active
+
 interests:
   heading: Where my interests sit
   items:
@@ -65,9 +95,9 @@ interests:
         whether the claim holds.
     - title: Music
       body: |
-        I play classical guitar and clarinet, and have studied both for many
-        years. I keep playing because I enjoy it. It does not need to connect to
-        anything else, and I prefer that it does not.
+        I play classical guitar and clarinet. I have completed Trinity Grade 8
+        in classical guitar and ABRSM Grade 6 in clarinet, and I practise and
+        perform regularly.
 
 studies:
   heading: Currently studying
@@ -77,14 +107,13 @@ studies:
     - Biology
     - Chemistry
     - Economics
-  # note: Add Standard Level subjects here if you would like them shown.
 
-# Optional second photograph showing you engaged in an activity (a lab bench,
-# a performance, a competition). Leave src empty until you have one.
+# Optional second photograph showing you engaged in an activity.
 activityPhoto:
   src: ''
   alt: ''
   caption: ''
+  annotation: ''
   ratio: '3/2'
   placeholder: Photograph of an activity
 
@@ -112,8 +141,10 @@ directions:
     ones to be harder, and I would like to be somewhere that takes the questions
     seriously.
 
-# A personal reflection in your own words. The section is hidden while `body`
-# is empty. Do not feel obliged to fill it.
+# A personal reflection in your own words. Shown as a labelled slot until you
+# add a body; remove `placeholder` to hide the section while empty instead.
 reflection:
   title: A note in my own words
+  date: ''
   body: ''
+  placeholder: Personal reflection

@@ -1,4 +1,12 @@
 ---
+/**
+ * Case study page. The shared header and the five-step structure are the
+ * same for every project; the opening composition changes with `layout`:
+ *   research  photograph + figure/poster side by side
+ *   product   phone-framed screenshot, example interaction, compact timeline
+ *   report    large visualisation, report excerpt beside a report preview
+ *   device    device photograph and application screens, visually linked
+ */
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Figure from '../../components/Figure.astro';
@@ -9,9 +17,13 @@ import Timeline from '../../components/Timeline.astro';
 import Publication from '../../components/Publication.astro';
 import LinkList from '../../components/LinkList.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
+import Excerpt from '../../components/Excerpt.astro';
+import Interaction from '../../components/Interaction.astro';
+import DatedList from '../../components/DatedList.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import { getPublishedProjects, getPublishedPublications, pickByIds } from '../../lib/content';
 import { href } from '../../lib/url';
+import { mdInline } from '../../lib/markdown';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects', ({ data }) => data.published);
@@ -19,18 +31,23 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const data = project.data;
+const d = project.data;
+const layout = d.layout;
 
 const all = await getPublishedProjects();
 const index = all.findIndex((p) => p.id === project.id);
 const prev = index > 0 ? all[index - 1] : undefined;
 const next = index < all.length - 1 ? all[index + 1] : undefined;
 
-const publications = data.publications ? pickByIds(await getPublishedPublications(), data.publications) : [];
-const metrics = (data.metrics ?? []).filter((m) => m.published !== false);
-const galleries = (data.galleries ?? []).filter((g) => g.published !== false);
-const hasVideo = data.video && data.video.published !== false && (data.video.youtube || data.video.src);
-const hasHero = data.hero && data.hero.published !== false;
+const publications = d.publications ? pickByIds(await getPublishedPublications(), d.publications) : [];
+const metrics = (d.metrics ?? []).filter((m) => m.published !== false);
+const galleries = (d.galleries ?? []).filter((g) => g.published !== false);
+const excerpts = (d.excerpts ?? []).filter((e) => e.published !== false);
+const sections = (d.sections ?? []).filter((s) => s.published !== false);
+const hero = d.hero && d.hero.published !== false ? d.hero : undefined;
+const figure = d.figure && d.figure.published !== false ? d.figure : undefined;
+const video = d.video && d.video.published !== false ? d.video : undefined;
+const interaction = d.interaction && d.interaction.published !== false ? d.interaction : undefined;
 
 const stepLabels: Record<string, string> = {
   question: 'Question',
@@ -41,68 +58,149 @@ const stepLabels: Record<string, string> = {
 };
 ---
 
-<Base title={data.title} description={data.summary}>
-  <article>
+<Base title={d.title} description={d.summary}>
+  <article class:list={['case', `case--${layout}`]}>
     <header class="case-head">
       <div class="wrap">
-        <p class="case-head__crumb sans">
+        <p class="case-head__crumb mono">
           <a href={href('/work')}>Research &amp; projects</a>
           <span aria-hidden="true"> / </span>
-          <span>{data.area}</span>
+          <span>{d.area}</span>
         </p>
-        <h1 class="case-head__title">{data.title}</h1>
-        <p class="case-head__summary">{data.summary}</p>
-
-        <dl class="case-meta sans">
-          <div>
+        <h1 class="case-head__title">{d.title}</h1>
+        <p class="case-head__summary">{d.summary}</p>
+        <dl class="case-meta">
+          <div class="case-meta__status">
             <dt>Status</dt>
-            <dd><StatusPill label={data.status.label} tone={data.status.tone} /></dd>
+            <dd>
+              <StatusPill label={d.status.label} tone={d.status.tone} />
+              {d.status.note && <span class="case-meta__note" set:html={mdInline(d.status.note)} />}
+            </dd>
           </div>
-          {data.role && (
+          {d.role && (
             <div>
               <dt>My role</dt>
-              <dd>{data.role}</dd>
+              <dd>{d.role}</dd>
             </div>
           )}
-          {data.period && (
+          {d.period && (
             <div>
               <dt>Period</dt>
-              <dd>{data.period}</dd>
+              <dd>{d.period}</dd>
             </div>
           )}
-          {data.affiliation && (
+          {d.affiliation && (
             <div>
               <dt>With</dt>
-              <dd>{data.affiliation}</dd>
+              <dd>{d.affiliation}</dd>
             </div>
           )}
         </dl>
       </div>
     </header>
 
+    {/* ---- Opening composition, by layout ---- */}
     {
-      hasHero && (
-        <div class="wrap case-hero">
-          <Figure image={data.hero} ratio="16/9" loading="eager" sizes="(min-width: 72rem) 72rem, 100vw" />
-        </div>
+      layout === 'research' && (
+        <section class="wrap open open--research">
+          {hero && (
+            <div class="open__main">
+              <Figure image={hero} ratio="3/2" loading="eager" sizes="(min-width: 76rem) 48rem, (min-width: 48em) 62vw, 100vw" />
+            </div>
+          )}
+          {figure && (
+            <div class="open__side">
+              <Figure image={figure} ratio="4/5" frame="paper" sizes="(min-width: 76rem) 24rem, (min-width: 48em) 34vw, 100vw" />
+            </div>
+          )}
+          <div class="open__intro">
+            <p class="eyebrow">In short</p>
+            <Prose text={d.intro} lead />
+          </div>
+        </section>
       )
     }
 
-    <section class="section case-intro">
-      <div class="wrap case-intro__grid">
-        <p class="eyebrow">In short</p>
-        <Prose text={data.intro} lead />
-      </div>
-    </section>
+    {
+      layout === 'product' && (
+        <section class="wrap open open--product">
+          {hero && (
+            <div class="open__phone">
+              <Figure image={hero} frame="phone" loading="eager" sizes="(min-width: 48em) 20rem, 70vw" />
+            </div>
+          )}
+          <div class="open__intro">
+            <p class="eyebrow">In short</p>
+            <Prose text={d.intro} lead />
+            {d.timeline && d.timeline.length > 0 && (
+              <div class="open__timeline">
+                <p class="eyebrow eyebrow--cobalt">{d.timelineHeading ?? 'Timeline'}</p>
+                <Timeline items={d.timeline} compact />
+              </div>
+            )}
+          </div>
+        </section>
+      )
+    }
 
+    {
+      layout === 'report' && (
+        <section class="wrap open open--report">
+          {hero && (
+            <div class="open__main">
+              <Figure image={hero} ratio="16/9" loading="eager" sizes="(min-width: 76rem) 76rem, 100vw" />
+            </div>
+          )}
+          <div class="open__intro">
+            <p class="eyebrow">In short</p>
+            <Prose text={d.intro} lead />
+          </div>
+          <div class="open__docs">
+            {excerpts[0] && <Excerpt excerpt={excerpts[0]} />}
+            {figure && (
+              <div class="open__preview">
+                <Figure image={figure} ratio="210/297" frame="paper" sizes="(min-width: 60em) 16rem, 60vw" />
+              </div>
+            )}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      layout === 'device' && (
+        <section class="wrap open open--device">
+          <div class="open__pair">
+            {hero && (
+              <div class="open__device">
+                <Figure image={hero} ratio="4/3" loading="eager" sizes="(min-width: 76rem) 44rem, (min-width: 48em) 60vw, 100vw" />
+              </div>
+            )}
+            <span class="open__link" aria-hidden="true" />
+            {figure && (
+              <div class="open__app">
+                <Figure image={figure} frame="phone" sizes="(min-width: 48em) 14rem, 55vw" />
+              </div>
+            )}
+          </div>
+          <div class="open__intro">
+            <p class="eyebrow">In short</p>
+            <Prose text={d.intro} lead />
+          </div>
+        </section>
+      )
+    }
+
+    {/* ---- Steps ---- */}
     <section class="section section--rule">
       <div class="wrap">
         <ol class="plain-list steps">
           {
-            data.steps.map((step) => (
+            d.steps.map((step, i) => (
               <li class="step" id={step.key}>
                 <div class="step__rail">
-                  <span class="step__label sans">{stepLabels[step.key] ?? step.key}</span>
+                  <span class="step__num mono">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="step__label">{stepLabels[step.key] ?? step.key}</span>
                 </div>
                 <div class="step__content">
                   <h2 class="step__title">{step.title}</h2>
@@ -115,17 +213,18 @@ const stepLabels: Record<string, string> = {
       </div>
     </section>
 
+    {/* ---- Example interaction (product) ---- */}
     {
-      data.timeline && data.timeline.length > 0 && (
+      interaction && (
         <section class="section section--tint">
           <div class="wrap aside-grid">
             <div>
-              <SectionHeading title={data.timelineHeading ?? 'Timeline'} />
+              <SectionHeading eyebrow="In use" title={interaction.heading} intro={interaction.intro} />
               {metrics.length > 0 && (
-                <dl class="metrics sans">
+                <dl class="metrics">
                   {metrics.map((m) => (
                     <div class="metric">
-                      <dt>{m.label}</dt>
+                      <dt class="mono">{m.label}</dt>
                       <dd>
                         <span class="metric__value">{m.value}</span>
                         {m.note && <span class="metric__note">{m.note}</span>}
@@ -135,18 +234,57 @@ const stepLabels: Record<string, string> = {
                 </dl>
               )}
             </div>
-            <Timeline items={data.timeline} />
+            <Interaction interaction={{ ...interaction, intro: undefined }} />
           </div>
         </section>
       )
     }
 
+    {/* ---- Timeline for non-product layouts ---- */}
+    {
+      layout !== 'product' && d.timeline && d.timeline.length > 0 && (
+        <section class="section section--tint">
+          <div class="wrap aside-grid">
+            <SectionHeading title={d.timelineHeading ?? 'Timeline'} />
+            <Timeline items={d.timeline} />
+          </div>
+        </section>
+      )
+    }
+
+    {/* ---- Extra sections (e.g. human fMRI work) ---- */}
+    {
+      sections.map((s) => (
+        <section class="section section--rule extra" id={s.id}>
+          <div class="wrap extra__grid">
+            <div class="extra__text">
+              {s.eyebrow && <p class="eyebrow eyebrow--teal">{s.eyebrow}</p>}
+              <h2>{s.heading}</h2>
+              <Prose text={s.body} />
+              {s.updates && s.updates.length > 0 && (
+                <div class="extra__updates">
+                  <p class="eyebrow">Updates</p>
+                  <DatedList items={s.updates} />
+                </div>
+              )}
+            </div>
+            {s.image && s.image.published !== false && (
+              <div class="extra__image">
+                <Figure image={s.image} ratio="4/3" sizes="(min-width: 60em) 30rem, 100vw" />
+              </div>
+            )}
+          </div>
+        </section>
+      ))
+    }
+
+    {/* ---- Publications ---- */}
     {
       publications.length > 0 && (
         <section class="section section--rule">
           <div class="wrap aside-grid">
             <div>
-              <SectionHeading title={data.publicationsHeading ?? 'Publications'} intro={data.publicationsNote} />
+              <SectionHeading eyebrow="Publications" title={d.publicationsHeading ?? 'Publications'} intro={d.publicationsNote} />
             </div>
             <div class="pubs">
               {publications.map((pub) => (
@@ -158,23 +296,41 @@ const stepLabels: Record<string, string> = {
       )
     }
 
+    {/* ---- Excerpts not already shown in the opening ---- */}
+    {
+      (layout === 'report' ? excerpts.slice(1) : excerpts).length > 0 && (
+        <section class="section section--rule">
+          <div class="wrap">
+            <SectionHeading title={d.excerptsHeading ?? 'Excerpts'} />
+            <div class="grid grid--2">
+              {(layout === 'report' ? excerpts.slice(1) : excerpts).map((e) => (
+                <Excerpt excerpt={e} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* ---- Galleries ---- */}
     {
       galleries.map((g) => (
         <section class="section section--rule">
           <div class="wrap">
-            <SectionHeading title={g.heading} intro={g.description} level={2} align="split" />
-            <Gallery images={g.images} columns={g.columns} ratio="4/3" />
+            <SectionHeading title={g.heading} intro={g.description} align="split" />
+            <Gallery images={g.images} columns={g.columns} ratio="4/3" pattern={g.images.length >= 3 ? 'varied' : 'even'} />
           </div>
         </section>
       ))
     }
 
+    {/* ---- Video ---- */}
     {
-      (hasVideo || data.video) && (
+      video && (
         <section class="section section--rule">
-          <div class="wrap">
-            <SectionHeading title={data.video?.title ?? 'Demonstration'} align="split" />
-            <VideoEmbed video={data.video} placeholder={hasVideo ? undefined : 'Demonstration video'} />
+          <div class="wrap video-grid">
+            <SectionHeading eyebrow="Demonstration" title={video.title ?? 'Demonstration'} />
+            <VideoEmbed video={video} />
           </div>
         </section>
       )
@@ -183,8 +339,8 @@ const stepLabels: Record<string, string> = {
     <footer class="section section--rule case-foot">
       <div class="wrap case-foot__grid">
         <div class="case-foot__links">
-          <LinkList heading="Links" links={data.links} />
-          <LinkList heading="Related" links={data.related} />
+          <LinkList heading="Links" links={d.links} />
+          <LinkList heading="Related" links={d.related} />
         </div>
         <nav class="case-nav" aria-label="Other case studies">
           {prev && (
@@ -194,7 +350,7 @@ const stepLabels: Record<string, string> = {
             </a>
           )}
           {next && (
-            <a class="case-nav__link case-nav__link--next" href={href(`/work/${next.id}`)}>
+            <a class="case-nav__link" href={href(`/work/${next.id}`)}>
               <span class="eyebrow">Next</span>
               <span class="case-nav__title">{next.data.title}</span>
             </a>
@@ -210,8 +366,6 @@ const stepLabels: Record<string, string> = {
     padding-block: clamp(2rem, 5vw, 4rem) var(--space-6);
   }
   .case-head__crumb {
-    font-size: 0.82rem;
-    color: var(--ink-3);
     margin-bottom: var(--space-5);
   }
   .case-head__crumb a {
@@ -220,11 +374,12 @@ const stepLabels: Record<string, string> = {
     border-bottom: 1px solid var(--line-strong);
   }
   .case-head__title {
-    max-width: 18ch;
+    max-width: 16ch;
+    font-size: var(--text-h1);
   }
   .case-head__summary {
-    font-size: var(--step-1);
-    line-height: 1.45;
+    font-size: var(--text-lead);
+    line-height: 1.4;
     color: var(--ink-2);
     max-width: 56ch;
     margin-bottom: var(--space-6);
@@ -238,32 +393,136 @@ const stepLabels: Record<string, string> = {
     border-top: 1px solid var(--line);
   }
   .case-meta dt {
-    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.4rem;
   }
   .case-meta dd {
     margin: 0;
-    font-size: 0.9rem;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: var(--text-sm);
     color: var(--ink);
   }
-  .case-hero {
-    margin-bottom: var(--space-6);
+  .case-meta__status dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .case-meta__note {
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--ink-2);
   }
 
-  .case-intro__grid {
+  /* Opening compositions */
+  .open {
+    display: grid;
+    gap: var(--space-5);
+    margin-bottom: var(--space-7);
+  }
+  .open__intro {
     display: grid;
     gap: var(--space-3);
+    align-content: start;
   }
-  @media (min-width: 60em) {
-    .case-intro__grid {
+
+  @media (min-width: 48em) {
+    .open--research {
+      grid-template-columns: 2fr 1fr;
+      grid-template-areas:
+        'main side'
+        'intro intro';
+      align-items: end;
+    }
+    .open--research .open__main {
+      grid-area: main;
+    }
+    .open--research .open__side {
+      grid-area: side;
+    }
+    .open--research .open__intro {
+      grid-area: intro;
       grid-template-columns: 10rem 1fr;
       gap: var(--space-6);
+      padding-top: var(--space-5);
     }
   }
 
+  .open--product .open__phone {
+    max-width: 18rem;
+    margin-inline: auto;
+  }
+  @media (min-width: 48em) {
+    .open--product {
+      grid-template-columns: minmax(14rem, 1fr) 2fr;
+      gap: var(--space-7);
+      align-items: start;
+    }
+    .open--product .open__phone {
+      margin-inline: 0;
+    }
+  }
+  .open__timeline {
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+
+  .open--report .open__docs {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 60em) {
+    .open--report .open__intro {
+      grid-template-columns: 10rem 1fr;
+      gap: var(--space-6);
+    }
+    .open--report .open__docs {
+      grid-template-columns: 2fr 1fr;
+      align-items: start;
+      gap: var(--space-7);
+    }
+  }
+  .open__preview {
+    max-width: 18rem;
+  }
+
+  .open__pair {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-4);
+    align-items: end;
+  }
+  .open__device {
+    grid-column: 1 / 5;
+  }
+  .open__app {
+    grid-column: 5 / 7;
+    max-width: 14rem;
+  }
+  .open__link {
+    position: absolute;
+    left: 50%;
+    bottom: 12%;
+    width: 22%;
+    border-top: 1.5px dashed var(--cobalt);
+    opacity: 0.8;
+  }
+  @media (min-width: 60em) {
+    .open--device {
+      grid-template-columns: 1.5fr 1fr;
+      gap: var(--space-7);
+      align-items: end;
+    }
+  }
+
+  /* Steps */
   .steps {
     display: grid;
     gap: var(--space-7);
@@ -283,17 +542,25 @@ const stepLabels: Record<string, string> = {
       align-self: start;
     }
   }
+  .step__rail {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding-top: 0.3rem;
+    border-top: 2px solid var(--cobalt);
+  }
+  .step__num {
+    color: var(--cobalt-ink);
+  }
   .step__label {
-    display: inline-block;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    padding: 0.3rem 0;
-    border-top: 2px solid var(--accent);
+    font-family: var(--font-head);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
   }
   .step__title {
-    font-size: var(--step-2);
+    font-size: var(--text-h3);
     margin-bottom: var(--space-4);
   }
 
@@ -312,28 +579,50 @@ const stepLabels: Record<string, string> = {
     gap: var(--space-4);
     margin: var(--space-5) 0 0;
   }
-  .metric dt {
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-  }
   .metric dd {
     margin: 0.2rem 0 0;
   }
   .metric__value {
-    font-family: var(--font-serif);
-    font-size: var(--step-3);
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: var(--text-h2);
     line-height: 1;
+    letter-spacing: -0.03em;
   }
   .metric__note {
     display: block;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     color: var(--ink-3);
     margin-top: 0.3rem;
   }
   .pubs {
     border-bottom: 1px solid var(--line);
+  }
+
+  .extra__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 60em) {
+    .extra__grid {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+  .extra__updates {
+    margin-top: var(--space-6);
+  }
+
+  .video-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 60em) {
+    .video-grid {
+      grid-template-columns: 1fr 2fr;
+      gap: var(--space-8);
+    }
   }
 
   .case-foot__grid {
@@ -365,12 +654,14 @@ const stepLabels: Record<string, string> = {
     transition: border-color var(--dur) var(--ease);
   }
   .case-nav__link:hover {
-    border-color: var(--accent);
+    border-color: var(--cobalt);
   }
   .case-nav__link .eyebrow {
     margin-bottom: 0.3rem;
   }
   .case-nav__title {
-    font-size: var(--step-1);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: var(--text-h4);
   }
 </style>

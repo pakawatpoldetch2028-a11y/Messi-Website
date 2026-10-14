@@ -1,0 +1,73 @@
+---
+/**
+ * A brief personal reflection. Hidden while `body` is empty, unless
+ * `placeholder` is set, in which case a labelled slot is shown.
+ */
+import Prose from './Prose.astro';
+import { formatDate } from '../lib/dates';
+import { getSite } from '../lib/content';
+
+interface Props {
+  reflection?: { title?: string; date?: string; body?: string; placeholder?: string; published?: boolean };
+  defaultTitle?: string;
+}
+const { reflection, defaultTitle = 'In my own words' } = Astro.props;
+const site = await getSite();
+const hasBody = Boolean(reflection?.body?.trim());
+const show = reflection && reflection.published !== false && (hasBody || reflection.placeholder);
+---
+
+{
+  show && (
+    <aside class:list={['reflection', { 'reflection--empty': !hasBody }]}>
+      <p class="eyebrow eyebrow--orange">{reflection!.title ?? defaultTitle}</p>
+      {hasBody ? (
+        <>
+          <Prose text={reflection!.body} />
+          {reflection!.date && <p class="mono reflection__date">{formatDate(reflection!.date)}</p>}
+        </>
+      ) : (
+        <div class="reflection__slot" aria-label={`Placeholder: ${reflection!.placeholder}`}>
+          <span class="reflection__rule" />
+          <span class="reflection__rule reflection__rule--short" />
+          {site.showPlaceholderLabels && <span class="reflection__label">{reflection!.placeholder}</span>}
+        </div>
+      )}
+    </aside>
+  )
+}
+
+<style>
+  .reflection {
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--orange);
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+  }
+  .reflection :global(.prose) {
+    font-size: var(--text-base);
+  }
+  .reflection__date {
+    margin: var(--space-3) 0 0;
+  }
+  .reflection__slot {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .reflection__rule {
+    display: block;
+    height: 1px;
+    background: var(--line-strong);
+  }
+  .reflection__rule--short {
+    width: 60%;
+  }
+  .reflection__label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+</style>

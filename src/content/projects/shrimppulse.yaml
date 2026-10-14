@@ -1,5 +1,6 @@
 # ---------------------------------------------------------------------------
 # Case study: ShrimpPulse
+# layout: product  (phone-framed screenshot, example interaction, timeline)
 # ---------------------------------------------------------------------------
 
 title: ShrimpPulse
@@ -10,24 +11,29 @@ summary: >-
   antimicrobials and chemicals.
 order: 2
 published: true
+layout: product
 status:
   label: Publicly released · version 4.0 in development
   tone: active
+  note: Released April 2026. Impact on antimicrobial use has not been measured.
 period: 2025 – present
 role: Creator and developer
 
+# Card image for the home page and project index.
 card:
   src: ''
   alt: ''
-  ratio: '4/3'
+  ratio: '16/10'
   placeholder: ShrimpPulse interface
 
+# The main interface screenshot, shown in a phone frame.
 hero:
   src: ''
   alt: ''
   caption: ''
-  ratio: '16/9'
-  placeholder: ShrimpPulse in use
+  annotation: ''
+  frame: phone
+  placeholder: Interface screenshot
 
 intro: |
   ShrimpPulse is a chatbot for Thai shrimp farmers. A farmer can describe what
@@ -73,7 +79,7 @@ steps:
     title: Evidence and status
     body: |
       ShrimpPulse is publicly released and in use, and a feedback form has been
-      collecting responses from users since September 2026. The timeline below
+      collecting responses from users since September 2026. The timeline
       records what has actually happened.
 
       What I am not claiming: releasing a tool does not prove that it changes
@@ -87,13 +93,28 @@ steps:
       incentives, trust, and institutions as much as about biology, and it is
       where my interest in [economics](/beyond#economics) meets this project.
 
-timelineHeading: Timeline
+# A real example interaction. Add messages in order; `from` is user or tool.
+# While `messages` is empty, a labelled slot of the same shape is shown.
+interaction:
+  heading: An example interaction
+  intro: ''
+  date: ''
+  note: ''
+  messages: []
+  # messages:
+  #   - from: user
+  #     text: "..."
+  #   - from: tool
+  #     text: "..."
+  placeholder: Example interaction
+  published: true
+
+timelineHeading: Development timeline
 timeline:
   - date: 2025-12
     title: Development of ShrimpPulse 2.0 begins
   - date: 2026-02
     title: Field testing begins
-    body: First use by farmers outside the development group.
   - date: 2026-04
     title: Public release
   - date: 2026-08
@@ -103,53 +124,39 @@ timeline:
 
 # Measured results. Leave empty (or published: false) until you have evidence.
 metrics: []
-# Example:
-#  - label: Users
-#    value: '—'
-#    note: As of October 2026
-#    published: false
 
 galleries:
-  - heading: Interface
-    description: Screenshots of the chatbot in use.
+  - heading: In the field
+    description: Photographs from field testing and visits to farms.
     columns: 3
     images:
       - src: ''
         alt: ''
         caption: ''
-        ratio: '9/16'
-        placeholder: Screenshot
-      - src: ''
-        alt: ''
-        caption: ''
-        ratio: '9/16'
-        placeholder: Screenshot
-      - src: ''
-        alt: ''
-        caption: ''
-        ratio: '9/16'
-        placeholder: Screenshot
-  - heading: In the field
-    description: Photographs from field testing and visits to farms.
-    columns: 2
-    images:
-      - src: ''
-        alt: ''
-        caption: ''
+        annotation: ''
         ratio: '3/2'
         placeholder: Field photograph
       - src: ''
         alt: ''
         caption: ''
+        annotation: ''
+        ratio: '3/2'
+        placeholder: Field photograph
+      - src: ''
+        alt: ''
+        caption: ''
+        annotation: ''
         ratio: '3/2'
         placeholder: Field photograph
 
-# A demonstration video. Provide a YouTube link or a file in public/files.
+# A demonstration video (YouTube link or a file in public/files).
 video:
   title: ShrimpPulse demonstration
+  date: ''
   youtube: ''
   src: ''
   caption: ''
+  placeholder: Demonstration video
   published: true
 
 links: []
@@ -165,9 +172,8 @@ related:
 
 notes: |
   EDITING NOTES (never shown on the site)
-  - Confirm the role line ("Creator and developer"). If others built parts of
-    the software, name them in the "My contribution" step.
-  - Add technical details (platform, model, knowledge sources) to the
-    "Approach" step if you want them public.
-  - Add a public link under `links` when the tool has a public URL.
-  - Fill in `metrics` only with numbers you can support.
+  - Confirm the role line ("Creator and developer"); name collaborators in the
+    "My contribution" step if others built parts of the software.
+  - Put the interface screenshot in src/assets/images/shrimppulse/ and set
+    hero.src. A tall phone screenshot (about 9:19) fits the frame best.
+  - Add a real example interaction under `interaction.messages`.

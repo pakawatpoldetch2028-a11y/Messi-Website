@@ -1,4 +1,4 @@
-# Beyond the Lab: communication and participation
+# Ideas & Expression: communication and participation
 title: Communication and participation
 lede: Public speaking, debate, and representing others
 order: 4
@@ -9,12 +9,27 @@ body: |
   speak in public when I can, compete in formats that reward quick and careful
   argument, and take on responsibilities that involve speaking for other
   people.
+# A speaking photograph (TEDx or another talk), with an optional video.
+featureImage:
+  src: ''
+  alt: ''
+  caption: ''
+  annotation: TEDx Bangkok Youth
+  ratio: '16/10'
+  placeholder: Speaking photograph
+video:
+  title: "TEDx Bangkok Youth: Pursuit of Passion"
+  date: ''
+  youtube: ''
+  src: ''
+  caption: ''
+  placeholder: Talk video
+  published: true
 items:
   - title: TEDx Bangkok Youth
     role: Speaker, "Pursuit of Passion"
     description: >-
       A talk on the pursuit of passion, given at a TEDx Bangkok Youth event.
-    # href: https://www.youtube.com/watch?v=...   # add the recording link if there is one
   - title: Future Leaders Speech Contest
     role: Third place, final round, 2024 and 2025
     href: /milestones#future-leaders-2025
@@ -40,19 +55,22 @@ gallery:
   - src: ''
     alt: ''
     caption: ''
+    annotation: ''
     ratio: '3/2'
-    placeholder: Speaking photograph
+    placeholder: Competition photograph
   - src: ''
     alt: ''
     caption: ''
+    annotation: ''
     ratio: '3/2'
     placeholder: Competition photograph
-galleryColumns: 2
+galleryHeading: Competitions and events
 reflection:
   title: A reflection
+  date: ''
   body: ''
+  placeholder: Personal reflection
 notes: |
-  - Add the TEDx talk date and recording link when available (the milestone
-    entry "tedx-bangkok-youth" in milestones.yaml is unpublished until then).
-  - Add MUN conference names, committees or awards if you want them shown.
+  - Add the TEDx date and recording link (video.youtube) when available; the
+    milestone "tedx-bangkok-youth" stays unpublished until the date is known.
   - Add photographs to src/assets/images/events/.

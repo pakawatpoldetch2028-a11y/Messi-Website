@@ -1,0 +1,437 @@
+---
+/**
+ * The connections diagram: a small network of my work and interests. Each
+ * node is a real button; selecting one highlights its links and shows a
+ * short explanation with a link to the relevant page. Works with mouse,
+ * touch and keyboard, and the plain list below it needs no JavaScript.
+ */
+import { getEntry } from 'astro:content';
+import { md } from '../lib/markdown';
+import { href as withBase } from '../lib/url';
+
+interface Props {
+  heading?: string;
+  intro?: string;
+}
+const { heading, intro } = Astro.props;
+
+const entry = await getEntry('connections', 'connections');
+if (!entry) throw new Error('src/content/connections.yaml is missing');
+const { nodes, edges, prompt } = entry.data;
+const byId = new Map(nodes.map((n) => [n.id, n]));
+
+// Data handed to the script: explanations are pre-rendered HTML.
+const payload = {
+  prompt,
+  nodes: nodes.map((n) => ({
+    id: n.id,
+    label: n.label,
+    kind: n.kind,
+    href: withBase(n.href),
+    linkLabel: n.linkLabel ?? 'Go to the page',
+    blurb: md(n.blurb),
+  })),
+  edges: edges.map((e) => ({
+    from: e.from,
+    to: e.to,
+    explanation: md(e.explanation),
+    note: e.note?.trim() ? md(e.note) : '',
+    href: e.href ? withBase(e.href) : '',
+    linkLabel: e.linkLabel ?? '',
+  })),
+};
+---
+
+<div class="connections" data-connections>
+  <div class="connections__head">
+    {heading && <h2 class="connections__title">{heading}</h2>}
+    {intro && <p class="connections__intro">{intro}</p>}
+  </div>
+
+  <div class="connections__stage">
+    <div class="diagram" data-diagram>
+      <svg class="diagram__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        {
+          edges.map((e) => {
+            const a = byId.get(e.from);
+            const b = byId.get(e.to);
+            if (!a || !b) return null;
+            return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} data-edge={`${e.from}:${e.to}`} vector-effect="non-scaling-stroke" />;
+          })
+        }
+      </svg>
+      <ul class="plain-list diagram__nodes" role="list">
+        {
+          nodes.map((n) => (
+            <li class="diagram__node" style={`--x: ${n.x}%; --y: ${n.y}%;`}>
+              <button type="button" class:list={['node', `node--${n.kind}`]} data-node={n.id} aria-pressed="false">
+                <span class="node__dot" aria-hidden="true" />
+                <span class="node__label">{n.short ?? n.label}</span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="panel" data-panel aria-live="polite">
+      <p class="panel__prompt">{prompt}</p>
+    </div>
+  </div>
+
+  <details class="connections__list">
+    <summary>All connections as a list</summary>
+    <ul class="plain-list connections__edges">
+      {
+        edges.map((e) => {
+          const a = byId.get(e.from);
+          const b = byId.get(e.to);
+          if (!a || !b) return null;
+          return (
+            <li>
+              <a href={withBase(a.href)}>{a.label}</a>
+              <span aria-hidden="true"> ↔ </span>
+              <a href={withBase(b.href)}>{b.label}</a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </details>
+
+  <script type="application/json" data-connections-data set:html={JSON.stringify(payload)} />
+</div>
+
+<script>
+  type Node = { id: string; label: string; kind: string; href: string; linkLabel: string; blurb: string };
+  type Edge = { from: string; to: string; explanation: string; note: string; href: string; linkLabel: string };
+
+  document.querySelectorAll<HTMLElement>('[data-connections]').forEach((root) => {
+    const dataEl = root.querySelector<HTMLScriptElement>('[data-connections-data]');
+    const panelEl = root.querySelector<HTMLElement>('[data-panel]');
+    if (!dataEl || !panelEl) return;
+    const panel: HTMLElement = panelEl;
+    const data = JSON.parse(dataEl.textContent || '{}') as { prompt: string; nodes: Node[]; edges: Edge[] };
+    const nodes = new Map(data.nodes.map((n) => [n.id, n]));
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-node]'));
+    const lines = Array.from(root.querySelectorAll<SVGLineElement>('[data-edge]'));
+    let selected: string | null = null;
+
+    function esc(s: string) {
+      return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] || c);
+    }
+
+    function render() {
+      buttons.forEach((b) => {
+        const id = b.dataset.node!;
+        const related = selected !== null && (id === selected || data.edges.some((e) => (e.from === selected && e.to === id) || (e.to === selected && e.from === id)));
+        b.setAttribute('aria-pressed', String(id === selected));
+        b.classList.toggle('is-related', related && id !== selected);
+        b.classList.toggle('is-dim', selected !== null && !related);
+      });
+      lines.forEach((l) => {
+        const [a, b] = l.dataset.edge!.split(':');
+        const on = selected !== null && (a === selected || b === selected);
+        l.classList.toggle('is-on', on);
+        l.classList.toggle('is-dim', selected !== null && !on);
+      });
+
+      if (!selected) {
+        panel.innerHTML = `<p class="panel__prompt">${esc(data.prompt)}</p>`;
+        return;
+      }
+      const node = nodes.get(selected)!;
+      const links = data.edges
+        .filter((e) => e.from === selected || e.to === selected)
+        .map((e) => {
+          const other = nodes.get(e.from === selected ? e.to : e.from)!;
+          const link = e.href ? `<a class="panel__edgelink" href="${esc(e.href)}">${esc(e.linkLabel || 'See the work')}</a>` : '';
+          const note = e.note ? `<div class="panel__note"><span class="mono">In my words</span>${e.note}</div>` : '';
+          return `<li class="panel__edge"><button type="button" class="panel__other" data-jump="${esc(other.id)}">${esc(other.label)}</button><div class="panel__expl">${e.explanation}</div>${note}${link}</li>`;
+        })
+        .join('');
+      panel.innerHTML = `
+        <p class="eyebrow panel__kind">${esc(node.kind)}</p>
+        <h3 class="panel__title">${esc(node.label)}</h3>
+        <div class="panel__blurb">${node.blurb}</div>
+        <p class="panel__link"><a href="${esc(node.href)}">${esc(node.linkLabel)} →</a></p>
+        <p class="eyebrow">Connected to</p>
+        <ul class="plain-list panel__edges">${links}</ul>`;
+      panel.querySelectorAll<HTMLButtonElement>('[data-jump]').forEach((b) =>
+        b.addEventListener('click', () => select(b.dataset.jump!)),
+      );
+    }
+
+    function select(id: string) {
+      selected = selected === id ? null : id;
+      render();
+      const btn = buttons.find((b) => b.dataset.node === selected);
+      btn?.focus({ preventScroll: true });
+    }
+
+    buttons.forEach((b, i) => {
+      b.addEventListener('click', () => select(b.dataset.node!));
+      b.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          buttons[(i + 1) % buttons.length].focus();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          buttons[(i - 1 + buttons.length) % buttons.length].focus();
+        } else if (e.key === 'Escape' && selected) {
+          selected = null;
+          render();
+        }
+      });
+    });
+
+    render();
+  });
+</script>
+
+<style>
+  .connections {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .connections__title {
+    margin-bottom: var(--space-3);
+  }
+  .connections__intro {
+    color: var(--on-navy-2);
+    max-width: 56ch;
+    font-size: var(--text-lead);
+    line-height: 1.4;
+    margin: 0;
+  }
+  .connections__stage {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 60em) {
+    .connections__stage {
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-7);
+      align-items: start;
+    }
+  }
+
+  /* Diagram */
+  .diagram {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--navy-line);
+    border-radius: var(--radius-lg);
+    background-image: radial-gradient(color-mix(in oklab, var(--navy-line) 70%, transparent) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .diagram__lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .diagram__lines line {
+    stroke: var(--on-navy-3);
+    stroke-width: 1.2;
+    opacity: 0.55;
+    transition:
+      stroke var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+  }
+  .diagram__lines line.is-on {
+    stroke: var(--cobalt);
+    stroke-width: 2.2;
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+  .diagram__lines line.is-dim {
+    opacity: 0.18;
+  }
+  .diagram__node {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    transform: translate(-50%, -50%);
+  }
+  .node {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem 0.45rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--navy-line);
+    background: var(--navy-2);
+    color: var(--on-navy);
+    font-family: var(--font-head);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      background var(--dur) var(--ease),
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+  .node:hover {
+    border-color: var(--on-navy-2);
+  }
+  .node[aria-pressed='true'] {
+    background: var(--cobalt);
+    border-color: var(--cobalt);
+    color: #fff;
+  }
+  .node.is-related {
+    border-color: #6f8df0;
+  }
+  .node.is-dim {
+    opacity: 0.45;
+  }
+  .node:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  .node__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+  .node--tool .node__dot {
+    background: #6f8df0;
+  }
+  .node--idea .node__dot {
+    background: var(--orange);
+  }
+  .node[aria-pressed='true'] .node__dot {
+    background: #fff;
+  }
+
+  /* On narrow screens the nodes become a wrapped row; lines are hidden. */
+  @media (max-width: 47.99em) {
+    .diagram {
+      aspect-ratio: auto;
+      background-image: none;
+      border: 0;
+    }
+    .diagram__lines {
+      display: none;
+    }
+    .diagram__nodes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .diagram__node {
+      position: static;
+      transform: none;
+    }
+  }
+
+  /* Panel */
+  .panel {
+    min-height: 12rem;
+    padding: var(--space-5);
+    border: 1px solid var(--navy-line);
+    border-radius: var(--radius-lg);
+    background: var(--navy-2);
+  }
+  .panel :global(.panel__prompt) {
+    margin: 0;
+    color: var(--on-navy-2);
+  }
+  .panel :global(.panel__kind) {
+    color: var(--on-navy-3);
+  }
+  .panel :global(.panel__title) {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-3);
+  }
+  .panel :global(.panel__blurb) {
+    color: var(--on-navy-2);
+  }
+  .panel :global(.panel__blurb p) {
+    margin: 0 0 0.6em;
+  }
+  .panel :global(.panel__link) {
+    margin: var(--space-3) 0 var(--space-5);
+    font-family: var(--font-head);
+    font-weight: 700;
+  }
+  .panel :global(.panel__link a) {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1.5px solid #6f8df0;
+  }
+  .panel :global(.panel__edges) {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .panel :global(.panel__edge) {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--navy-line);
+  }
+  .panel :global(.panel__other) {
+    justify-self: start;
+    background: none;
+    border: 0;
+    padding: 0;
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: var(--text-base);
+    cursor: pointer;
+    border-bottom: 1px dashed var(--on-navy-3);
+  }
+  .panel :global(.panel__expl) {
+    font-size: var(--text-sm);
+    color: var(--on-navy-2);
+  }
+  .panel :global(.panel__expl p) {
+    margin: 0;
+  }
+  .panel :global(.panel__note) {
+    font-size: var(--text-sm);
+    color: var(--on-navy);
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--orange);
+  }
+  .panel :global(.panel__note .mono) {
+    display: block;
+    color: var(--on-navy-3);
+    margin-bottom: 0.2rem;
+  }
+  .panel :global(.panel__note p) {
+    margin: 0;
+  }
+  .panel :global(.panel__edgelink) {
+    font-family: var(--font-head);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid #6f8df0;
+    justify-self: start;
+  }
+
+  /* Plain list fallback */
+  .connections__list summary {
+    cursor: pointer;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--on-navy-2);
+  }
+  .connections__edges {
+    margin-top: var(--space-3);
+    display: grid;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+  }
+</style>

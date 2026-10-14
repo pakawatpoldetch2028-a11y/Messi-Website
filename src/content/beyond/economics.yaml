@@ -1,4 +1,4 @@
-# Beyond the Lab: economics
+# Ideas & Expression: economics
 title: Economics
 lede: Incentives, trade-offs, and policy
 order: 1
@@ -25,9 +25,27 @@ highlights:
   - label: IEOx Essay Challenge 2026
     detail: Preliminary round, Top 40
     href: /milestones#ieox-2026-top-40
+# Short excerpts from essays. Paste a passage into `text`; link the full
+# document with `href` (a PDF in public/files or a URL).
+excerptsHeading: From my writing
+excerpts:
+  - title: Essay excerpt
+    date: ''
+    attribution: IEOx Essay Challenge 2026
+    text: ''
+    href: ''
+    hrefLabel: Read the full essay
+    placeholder: Essay excerpt
+gallery:
+  - src: ''
+    alt: ''
+    caption: ''
+    annotation: ''
+    ratio: '3/2'
+    placeholder: Competition photograph
+galleryHeading: Competitions
 reflection:
   title: A reflection
+  date: ''
   body: ''
-notes: |
-  Add a personal reflection to `reflection.body` if you would like one
-  shown. The section stays hidden while it is empty.
+  placeholder: Personal reflection
