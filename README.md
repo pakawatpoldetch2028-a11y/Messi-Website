@@ -214,8 +214,10 @@ Pages, GitHub Pages). A GitHub Pages workflow is included in
 `.github/workflows/deploy.yml`:
 
 1. On GitHub, open **Settings → Pages** and set **Source** to "GitHub Actions".
-2. Push to the `main` branch. The site appears at
-   `https://<your-username>.github.io/<repository-name>/`.
+   This step matters: the other option, "Deploy from a branch", makes GitHub
+   run Jekyll over the source files, which fails on `.astro` components.
+2. Push to the repository's default branch. The workflow builds the site and
+   publishes it at `https://<your-username>.github.io/<repository-name>/`.
 
 With a custom domain, set the `SITE_URL` environment variable in the workflow
 to that domain and `BASE_PATH` to `/` (see the comments in

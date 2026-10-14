@@ -1,6 +1,9 @@
-# Builds the site and publishes it to GitHub Pages whenever `main` changes.
+# Builds the site and publishes it to GitHub Pages whenever the repository's
+# default branch changes (whatever that branch is called).
 #
 # One-time setup on GitHub: Settings → Pages → Source: "GitHub Actions".
+# (With the other option, "Deploy from a branch", GitHub runs Jekyll over the
+# source files and fails on the .astro components.)
 #
 # The site is served at https://<user>.github.io/<repo>/ unless you add a
 # custom domain, in which case set SITE_URL to that domain and BASE_PATH to /.
@@ -8,7 +11,6 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -22,6 +24,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
