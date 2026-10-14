@@ -8,11 +8,12 @@ import { getSite } from '../lib/content';
 import { resolveImage } from '../lib/images';
 
 interface Props {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'h1' | 'h2';
   tone?: 'light' | 'dark';
+  alt?: string; // override the alt text, e.g. just the nickname inside a heading
   class?: string;
 }
-const { size = 'md', tone = 'light', class: className } = Astro.props;
+const { size = 'md', tone = 'light', alt, class: className } = Astro.props;
 const site = await getSite();
 const resolved = site.mark?.published !== false ? resolveImage(site.mark?.src) : undefined;
 ---
@@ -20,7 +21,7 @@ const resolved = site.mark?.published !== false ? resolveImage(site.mark?.src) :
 <span class:list={['mark', `mark--${size}`, `mark--${tone}`, className]}>
   {
     resolved ? (
-      <Image src={resolved} alt={site.mark?.alt || `${site.nickname}, handwritten`} width={480} format="webp" class="mark__img" />
+      <Image src={resolved} alt={alt ?? (site.mark?.alt || `${site.nickname}, handwritten`)} width={960} format="webp" class="mark__img" />
     ) : (
       <span class="mark__text" aria-label={site.nickname}>
         {site.nickname}
@@ -46,6 +47,13 @@ const resolved = site.mark?.published !== false ? resolveImage(site.mark?.src) :
   }
   .mark--lg {
     --mark-h: 3.4rem;
+  }
+  /* Sized to sit inside a heading of the matching level */
+  .mark--h1 {
+    --mark-h: calc(var(--text-h1) * 1.2);
+  }
+  .mark--h2 {
+    --mark-h: calc(var(--text-h2) * 1.45);
   }
   .mark--dark :global(.mark__img) {
     filter: invert(1) brightness(1.9);

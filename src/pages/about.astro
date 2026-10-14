@@ -25,11 +25,8 @@ const activityPhoto = about.activityPhoto && about.activityPhoto.published !== f
       </div>
       <div class="about-hero__text">
         <p class="eyebrow">{about.heading}</p>
-        <h1 class="about-hero__title">{site.firstName} <span>“{site.nickname}”</span> {site.surname}</h1>
+        <h1 class="about-hero__title">{site.firstName} <span class="about-hero__nick"><Mark size="h2" alt={site.nickname} /></span> {site.surname}</h1>
         <Prose text={about.opening} lead />
-        <div class="about-hero__sign">
-          <Mark size="md" />
-        </div>
       </div>
     </div>
   </section>
@@ -148,15 +145,14 @@ const activityPhoto = about.activityPhoto && about.activityPhoto.published !== f
     font-size: var(--text-h2);
     margin-bottom: var(--space-5);
   }
-  .about-hero__title span {
-    color: var(--cobalt-ink);
+  .about-hero__nick {
+    display: inline-block;
+    vertical-align: -0.28em;
+    margin: 0 0.08em;
   }
   .about-hero__text :global(.prose--lead) {
     max-width: 54ch;
     font-size: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
-  }
-  .about-hero__sign {
-    margin-top: var(--space-5);
   }
 
   .aside-grid {

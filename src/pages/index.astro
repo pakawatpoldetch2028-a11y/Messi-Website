@@ -33,7 +33,7 @@ const previewImages = home.preview.images.filter((i) => i.published !== false);
         <p class="eyebrow opening__eyebrow">{home.opening.eyebrow}</p>
         <h1 class="opening__name">
           <span class="opening__first">{site.firstName}</span>
-          <span class="opening__nick">“{site.nickname}”</span>
+          <span class="opening__nick"><Mark size="h1" alt={site.nickname} /></span>
           <span class="opening__last">{site.surname}</span>
         </h1>
         <p class="opening__theme">{home.opening.theme}</p>
@@ -41,10 +41,6 @@ const previewImages = home.preview.images.filter((i) => i.published !== false);
         <div class="opening__actions">
           <Button href={home.opening.primary.href}>{home.opening.primary.label}</Button>
           <Button href={home.opening.secondary.href} variant="secondary">{home.opening.secondary.label}</Button>
-        </div>
-        <div class="opening__sign">
-          <Mark size="md" />
-          <span class="mono">{site.location}</span>
         </div>
       </div>
 
@@ -160,7 +156,9 @@ const previewImages = home.preview.images.filter((i) => i.published !== false);
     margin-bottom: var(--space-4);
   }
   .opening__nick {
-    color: var(--cobalt-ink);
+    display: block;
+    padding: 0.12em 0 0.08em;
+    line-height: 1;
   }
   .opening__theme {
     font-family: var(--font-head);
@@ -178,14 +176,6 @@ const previewImages = home.preview.images.filter((i) => i.published !== false);
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-6);
-  }
-  .opening__sign {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--space-4);
-    margin-top: var(--space-6);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
   }
 
   .opening__media {
