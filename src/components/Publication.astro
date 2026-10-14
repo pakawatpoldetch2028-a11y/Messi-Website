@@ -1,0 +1,87 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Prose from './Prose.astro';
+
+interface Props {
+  publication: CollectionEntry<'publications'>;
+  compact?: boolean;
+}
+const { publication, compact = false } = Astro.props;
+const p = publication.data;
+const venue = [p.journal, p.volume && `vol. ${p.volume}`, p.issue && `no. ${p.issue}`, p.pages && `pp. ${p.pages}`]
+  .filter(Boolean)
+  .join(', ');
+const statusLabel = p.status === 'in-press' ? 'In press' : p.status === 'in-progress' ? 'In progress' : undefined;
+---
+
+<article class:list={['pub', { 'pub--compact': compact }]}>
+  <div class="pub__year sans">{p.year}</div>
+  <div class="pub__body">
+    <h3 class="pub__title">
+      <a href={p.url} rel="noopener" target="_blank">{p.title}</a>
+    </h3>
+    <p class="pub__meta sans">
+      {p.authors ? <span>{p.authors}. </span> : <span>{p.role}. </span>}
+      {venue && <span class="pub__venue">{venue}. </span>}
+      {p.doi && <span>DOI: <a href={`https://doi.org/${p.doi}`} rel="noopener" target="_blank">{p.doi}</a></span>}
+      {statusLabel && <span class="pub__status">{statusLabel}</span>}
+    </p>
+    {!compact && p.summary && <Prose text={p.summary} muted class="pub__summary" />}
+    {!compact && p.authors && <p class="pub__role sans">{p.role}</p>}
+  </div>
+</article>
+
+<style>
+  .pub {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: var(--space-4);
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--line);
+  }
+  .pub--compact {
+    padding: var(--space-4) 0;
+  }
+  .pub__year {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+    padding-top: 0.35rem;
+  }
+  .pub__title {
+    font-size: var(--step-1);
+    font-weight: 450;
+    margin-bottom: 0.35rem;
+  }
+  .pub--compact .pub__title {
+    font-size: var(--step-0);
+  }
+  .pub__title a {
+    color: var(--ink);
+    text-decoration-color: var(--line-strong);
+  }
+  .pub__title a:hover {
+    text-decoration-color: var(--accent);
+  }
+  .pub__meta {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+    margin: 0 0 0.5rem;
+    line-height: 1.6;
+  }
+  .pub__status {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.72rem;
+  }
+  .pub__body :global(.pub__summary) {
+    font-size: 0.95rem;
+  }
+  .pub__role {
+    margin: 0.5rem 0 0;
+    font-size: 0.8rem;
+    color: var(--ink-3);
+  }
+</style>

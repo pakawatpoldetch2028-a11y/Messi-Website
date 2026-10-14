@@ -1,0 +1,197 @@
+---
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import Publication from '../../components/Publication.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Button from '../../components/Button.astro';
+import { getPublishedProjects, getPublishedPublications } from '../../lib/content';
+import { href } from '../../lib/url';
+
+const projects = await getPublishedProjects();
+const publications = await getPublishedPublications();
+const description =
+  'Case studies of research and projects by Pakawat (Messi) Poldetch: aquaculture research and antimicrobial resistance, ShrimpPulse, neuroscience and connectomics, and Telesync.';
+---
+
+<Base title="Research & Projects" description={description}>
+  <section class="page-head">
+    <div class="wrap page-head__grid">
+      <div>
+        <p class="eyebrow">Research & projects</p>
+        <h1>Case studies</h1>
+      </div>
+      <div class="page-head__intro prose prose--lead">
+        <p>
+          Each project is written the same way: the question or problem, the approach, what I
+          contributed, what the evidence shows so far, and the question that comes next. I have tried
+          to keep my own contribution distinct from my collaborators' work, and finished results
+          distinct from intended benefits.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <ol class="plain-list studies">
+        {
+          projects.map((p, i) => {
+            const url = href(`/work/${p.id}`);
+            const image = p.data.card ?? p.data.hero;
+            return (
+              <li class:list={['study', { 'study--flip': i % 2 === 1 }]}>
+                <a class="study__media" href={url} tabindex="-1" aria-hidden="true">
+                  <Figure
+                    image={image}
+                    ratio="4/3"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    sizes="(min-width: 60em) 30rem, (min-width: 48em) 45vw, 100vw"
+                    placeholder={p.data.title}
+                  />
+                </a>
+                <div class="study__body">
+                  <span class="study__index sans">{String(i + 1).padStart(2, '0')}</span>
+                  <p class="eyebrow">{p.data.area}</p>
+                  <h2 class="study__title">
+                    <a href={url}>{p.data.title}</a>
+                  </h2>
+                  <p class="study__summary">{p.data.summary}</p>
+                  <div class="study__meta">
+                    <StatusPill label={p.data.status.label} tone={p.data.status.tone} />
+                    {p.data.role && <span class="study__role sans">{p.data.role}</span>}
+                  </div>
+                  <Button href={`/work/${p.id}`} variant="link">Read the case study</Button>
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+  </section>
+
+  {
+    publications.length > 0 && (
+      <section class="section section--rule">
+        <div class="wrap pubs__grid">
+          <div>
+            <SectionHeading
+              eyebrow="Publications"
+              title="Peer-reviewed papers"
+              intro="Co-authored studies in aquaculture health and nutrition. Details and the research context are on the aquaculture page."
+            />
+            <Button href="/work/aquaculture-research" variant="link">
+              Aquaculture research
+            </Button>
+          </div>
+          <div class="pubs__list">
+            {publications.map((pub) => (
+              <Publication publication={pub} compact />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 6vw, 5rem) var(--space-7);
+  }
+  .page-head__grid {
+    display: grid;
+    gap: var(--space-5);
+    align-items: end;
+  }
+  @media (min-width: 60em) {
+    .page-head__grid {
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--space-8);
+    }
+  }
+  .page-head h1 {
+    margin-bottom: 0;
+  }
+  .page-head__intro {
+    color: var(--ink-2);
+  }
+
+  .studies {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .study {
+    display: grid;
+    gap: var(--space-5);
+    align-items: center;
+  }
+  @media (min-width: 48em) {
+    .study {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+    }
+    .study--flip .study__media {
+      order: 2;
+    }
+  }
+  .study__media {
+    display: block;
+  }
+  .study__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+  .study__body .eyebrow {
+    margin-bottom: 0;
+  }
+  .study__index {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .study__title {
+    font-size: var(--step-3);
+    margin: 0;
+  }
+  .study__title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .study__title a:hover {
+    color: var(--accent-ink);
+  }
+  .study__summary {
+    color: var(--ink-2);
+    max-width: 48ch;
+    margin: var(--space-2) 0 var(--space-3);
+  }
+  .study__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .study__role {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+  }
+
+  .pubs__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 60em) {
+    .pubs__grid {
+      grid-template-columns: 1fr 1.6fr;
+      gap: var(--space-8);
+    }
+  }
+  .pubs__list {
+    border-bottom: 1px solid var(--line);
+  }
+</style>

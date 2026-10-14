@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+---
+
+<Base title="Page not found" description="That page does not exist.">
+  <section class="notfound">
+    <div class="wrap--narrow">
+      <p class="eyebrow">404</p>
+      <h1>That page isn't here.</h1>
+      <p class="prose prose--lead prose--muted">
+        The link may be out of date, or the page may have moved. The main sections are in the
+        navigation above.
+      </p>
+      <p><Button href="/">Back to the start</Button></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: var(--space-9);
+  }
+  .notfound p {
+    margin-bottom: var(--space-5);
+  }
+</style>

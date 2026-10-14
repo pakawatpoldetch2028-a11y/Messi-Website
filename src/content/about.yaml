@@ -1,0 +1,119 @@
+# ---------------------------------------------------------------------------
+# About page
+# ---------------------------------------------------------------------------
+
+metaDescription: >-
+  An intellectual portrait of Pakawat (Messi) Poldetch: biology and
+  neuroscience, quantitative thinking, economics, history, philosophy, and
+  music, and the questions that connect them.
+
+heading: About
+
+portrait:
+  src: portraits/messi-portrait.jpg
+  alt: Pakawat (Messi) Poldetch in a white school polo shirt, photographed indoors.
+  position: 50% 25%
+  ratio: '3/4'
+  placeholder: Portrait
+
+opening: |
+  I live in Bangkok and am in Grade 11 at Ruamrudee International School, Class
+  of 2028. The simplest way to describe what interests me is that I like to
+  understand how things work at the level of their parts, and then ask what that
+  understanding is good for.
+
+  That instinct shows up in different places. In biology, it is the question of
+  how cells, pathogens, and environments interact to produce health or disease.
+  In neuroscience, it is the question of how the wiring of a circuit relates to
+  what it computes. In economics, it is the question of how incentives shape
+  what people and institutions actually do. In history and philosophy, it is the
+  question of how we interpret what happened, and what we should value when we
+  decide what to do next.
+
+interests:
+  heading: Where my interests sit
+  items:
+    - title: Biology and neuroscience
+      body: |
+        Most of my research so far has been in aquatic animal health, with the
+        Faculty of Fisheries at Kasetsart University. Shrimp farming is a system
+        where biology, economics, and regulation meet: a disease outbreak is a
+        scientific problem, a financial one, and often a question about how
+        antibiotics are used. My current research direction is antimicrobial
+        resistance in aquaculture.
+
+        Neuroscience is the other side of the same interest. I am drawn to
+        connectomics, the study of complete wiring diagrams, because it asks a
+        very direct version of my central question: given the structure of a
+        system, what does it do?
+    - title: Quantitative thinking
+      body: |
+        Mathematics is how I make my questions precise. I take Mathematics
+        Analysis and Approaches at Higher Level, and I find that the habit of
+        defining things carefully carries over into biology and economics, where
+        a vague question usually hides a measurable one.
+    - title: Economics, history, and philosophy
+      body: |
+        Economics gives me a language for incentives, trade-offs, and policy. I
+        compete in economics olympiads, and I have recently become interested in
+        climate economics, particularly carbon-border policy and what it means
+        for exporting countries like Thailand.
+
+        History and philosophy keep me honest. History shows how institutions
+        and consequences unfold over time, and how much depends on
+        interpretation. Philosophy forces me to say what I actually mean, and
+        whether the claim holds.
+    - title: Music
+      body: |
+        I play classical guitar and clarinet, and have studied both for many
+        years. I keep playing because I enjoy it. It does not need to connect to
+        anything else, and I prefer that it does not.
+
+studies:
+  heading: Currently studying
+  programme: IB Diploma Programme, Higher Level
+  items:
+    - Mathematics (Analysis and Approaches)
+    - Biology
+    - Chemistry
+    - Economics
+  # note: Add Standard Level subjects here if you would like them shown.
+
+# Optional second photograph showing you engaged in an activity (a lab bench,
+# a performance, a competition). Leave src empty until you have one.
+activityPhoto:
+  src: ''
+  alt: ''
+  caption: ''
+  ratio: '3/2'
+  placeholder: Photograph of an activity
+
+questions:
+  heading: Questions I'm exploring
+  intro: >-
+    These are the questions I keep returning to. The projects on this site are
+    attempts at partial answers.
+  items:
+    - How do interactions between biological components produce complex behaviour?
+    - What makes scientific knowledge usable outside a laboratory?
+    - How do incentives and institutions influence the adoption of useful technologies?
+    - When a decision has to be made with incomplete knowledge, what does it mean to make it well?
+
+directions:
+  heading: Where I would like to go next
+  body: |
+    I would like to study biomedicine, biomedical engineering, or neuroscience,
+    and I am still working out how those fit together. What I do know is the
+    shape of the work I want to do: understanding a biological system carefully
+    enough that the understanding changes a decision, whether that decision
+    belongs to a farmer, a clinician, or a patient.
+
+    The projects on this site are my first attempts at that. I expect the next
+    ones to be harder, and I would like to be somewhere that takes the questions
+    seriously.
+
+# A personal reflection in your own words. The section is hidden while `body`
+# is empty. Do not feel obliged to fill it.
+reflection:
+  title: A note in my own words
+  body: ''

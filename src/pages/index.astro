@@ -1,0 +1,250 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import Prose from '../components/Prose.astro';
+import Button from '../components/Button.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import MilestoneItem from '../components/MilestoneItem.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Ornament from '../components/Ornament.astro';
+import { getPublishedProjects, getPublishedMilestones, pickByIds } from '../lib/content';
+import { href } from '../lib/url';
+
+const entry = await getEntry('home', 'home');
+if (!entry) throw new Error('src/content/home.yaml is missing');
+const home = entry.data;
+
+const projects = pickByIds(await getPublishedProjects(), home.featured.projects);
+const milestones = pickByIds(await getPublishedMilestones(), home.milestones.ids);
+---
+
+<Base title="Home" description={home.metaDescription} isHome>
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow hero__eyebrow">{home.hero.eyebrow}</p>
+        <h1 class="hero__heading">{home.hero.heading}</h1>
+        <Prose text={home.hero.intro} lead class="hero__intro" />
+        <div class="hero__actions">
+          <Button href={home.hero.primary.href}>{home.hero.primary.label}</Button>
+          <Button href={home.hero.secondary.href} variant="secondary">{home.hero.secondary.label}</Button>
+        </div>
+      </div>
+      <div class="hero__media">
+        <Ornament class="hero__ornament" variant="tall" />
+        <Figure
+          image={home.hero.portrait}
+          ratio="4/5"
+          variant="offset"
+          loading="eager"
+          sizes="(min-width: 60em) 24rem, (min-width: 48em) 40vw, 80vw"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--rule threads">
+    <div class="wrap">
+      <SectionHeading title={home.threads.heading} intro={home.threads.intro} align="split" />
+      <ol class="plain-list threads__list">
+        {
+          home.threads.items.map((item, i) => (
+            <li class="thread">
+              <span class="thread__index sans">0{i + 1}</span>
+              <h3 class="thread__title">{item.title}</h3>
+              <Prose text={item.body} muted class="thread__body" />
+              {item.href && (
+                <a class="thread__link sans" href={href(item.href)}>
+                  {item.linkLabel ?? 'Read more'}
+                  <span aria-hidden="true"> →</span>
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--tint featured">
+    <div class="wrap">
+      <SectionHeading eyebrow="Research & projects" title={home.featured.heading} intro={home.featured.intro} align="split" />
+      <div class="grid grid--3">
+        {projects.map((p, i) => <ProjectCard project={p} eager={i === 0} />)}
+      </div>
+      <p class="featured__more">
+        <Button href="/work" variant="link">All research and projects</Button>
+      </p>
+    </div>
+  </section>
+
+  <section class="section question">
+    <div class="wrap question__grid">
+      <div class="question__art"><Ornament /></div>
+      <blockquote class="question__quote">
+        <p class="question__text">{home.question.quote}</p>
+        <Prose text={home.question.body} muted class="question__body" />
+        {home.question.href && (
+          <p>
+            <Button href={home.question.href} variant="link">{home.question.linkLabel ?? 'More'}</Button>
+          </p>
+        )}
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="section section--rule milestones">
+    <div class="wrap milestones__grid">
+      <div class="milestones__head">
+        <SectionHeading eyebrow="Milestones" title={home.milestones.heading} intro={home.milestones.intro} />
+        <Button href="/milestones" variant="link">See all milestones</Button>
+      </div>
+      <ol class="plain-list milestones__list">
+        {milestones.map((m) => <MilestoneItem milestone={m} compact />)}
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: clamp(2.5rem, 7vw, 6rem) var(--space-8);
+    overflow-x: clip;
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  @media (min-width: 48em) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.85fr);
+      gap: clamp(2rem, 6vw, 5rem);
+    }
+  }
+  .hero__eyebrow {
+    margin-bottom: var(--space-5);
+  }
+  .hero__heading {
+    max-width: 14ch;
+    margin-bottom: var(--space-5);
+  }
+  .hero__text :global(.hero__intro) {
+    max-width: 52ch;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+  .hero__media {
+    position: relative;
+    max-width: 26rem;
+    margin-inline: auto;
+    width: 100%;
+  }
+  @media (min-width: 48em) {
+    .hero__media {
+      margin-inline: 0 0;
+      justify-self: end;
+    }
+  }
+  .hero__media :global(.hero__ornament) {
+    position: absolute;
+    right: -12%;
+    top: -10%;
+    width: 28%;
+    z-index: -1;
+    opacity: 0.3;
+  }
+
+  .threads__list {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 48em) {
+    .threads__list {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+  }
+  .thread {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line-strong);
+  }
+  .thread__index {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .thread__title {
+    font-size: var(--step-2);
+    margin: 0;
+    max-width: 16ch;
+  }
+  .thread :global(.thread__body) {
+    font-size: 0.98rem;
+  }
+  .thread__link {
+    font-size: 0.86rem;
+    font-weight: 540;
+    color: var(--ink);
+    text-decoration: none;
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+  .thread__link:hover {
+    color: var(--accent-ink);
+  }
+
+  .featured__more {
+    margin-top: var(--space-6);
+  }
+
+  .question__grid {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+  }
+  @media (min-width: 60em) {
+    .question__grid {
+      grid-template-columns: 1fr 1.4fr;
+    }
+  }
+  .question__art {
+    max-width: 24rem;
+  }
+  .question__text {
+    font-size: var(--step-3);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    max-width: 22ch;
+    margin-bottom: var(--space-5);
+    text-wrap: balance;
+  }
+  .question__quote :global(.question__body) {
+    max-width: 54ch;
+    margin-bottom: var(--space-4);
+  }
+
+  .milestones__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 60em) {
+    .milestones__grid {
+      grid-template-columns: minmax(14rem, 1fr) 2fr;
+      gap: var(--space-8);
+    }
+  }
+  .milestones__list {
+    border-bottom: 1px solid var(--line);
+  }
+</style>

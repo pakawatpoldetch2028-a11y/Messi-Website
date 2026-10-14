@@ -1,0 +1,33 @@
+# Beyond the Lab: economics
+title: Economics
+lede: Incentives, trade-offs, and policy
+order: 1
+published: true
+body: |
+  Economics is the discipline that most directly asks my central question:
+  given how a system is set up, what will people do? I compete in the Thailand
+  Economics Olympiad and the International Economics Olympiad, and I took part
+  in the IEOx Essay Challenge in 2026.
+
+  Lately I have been reading about climate economics, especially carbon-border
+  policy. When a large economy taxes the carbon embedded in its imports, what
+  happens to exporters like Thailand, who adjusts, and who ultimately pays? It
+  is a question about incentives and institutions at once, and it connects to
+  the practical side of my research: a useful technology still has to survive
+  the incentives around it.
+highlights:
+  - label: International Economics Olympiad 2026
+    detail: Bronze medal
+    href: /milestones#ieo-2026-bronze
+  - label: Thailand Economics Olympiad 2026
+    detail: Gold medal
+    href: /milestones#teo-2026-gold
+  - label: IEOx Essay Challenge 2026
+    detail: Preliminary round, Top 40
+    href: /milestones#ieox-2026-top-40
+reflection:
+  title: A reflection
+  body: ''
+notes: |
+  Add a personal reflection to `reflection.body` if you would like one
+  shown. The section stays hidden while it is empty.

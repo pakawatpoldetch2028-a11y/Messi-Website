@@ -1,0 +1,206 @@
+---
+import { getSite } from '../lib/content';
+import { href, isCurrent } from '../lib/url';
+
+const site = await getSite();
+const path = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="wordmark" href={href('/')} aria-label={`${site.name}, home`}>
+      <span class="wordmark__name">{site.shortName}</span>
+      <span class="wordmark__sub sans">{site.nickname}</span>
+    </a>
+
+    <button
+      class="menu-toggle sans"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-menu-toggle
+    >
+      <span class="menu-toggle__label" data-label-closed>Menu</span>
+      <span class="menu-toggle__label" data-label-open hidden>Close</span>
+      <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span></span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label="Main" data-nav>
+      <ul class="plain-list nav__list">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a
+                class="nav__link sans"
+                href={href(item.href)}
+                aria-current={isCurrent(path, item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const labelClosed = toggle?.querySelector<HTMLElement>('[data-label-closed]');
+  const labelOpen = toggle?.querySelector<HTMLElement>('[data-label-open]');
+
+  function setOpen(open: boolean) {
+    if (!toggle || !nav) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('is-open', open);
+    document.documentElement.classList.toggle('nav-open', open);
+    if (labelClosed) labelClosed.hidden = open;
+    if (labelOpen) labelOpen.hidden = !open;
+  }
+
+  toggle?.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+
+  // Close the menu if the viewport grows past the mobile breakpoint.
+  const mq = window.matchMedia('(min-width: 48em)');
+  mq.addEventListener('change', (e) => {
+    if (e.matches) setOpen(false);
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in oklab, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    min-height: 4.25rem;
+    flex-wrap: wrap;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .wordmark__name {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .wordmark__sub {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .nav__list {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+  .nav__link {
+    display: inline-block;
+    padding: 0.5rem 0;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1.5px solid transparent;
+    transition:
+      color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .nav__link:hover {
+    color: var(--ink);
+  }
+  .nav__link[aria-current='page'] {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  .menu-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    background: none;
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .menu-toggle__icon {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 16px;
+  }
+  .menu-toggle__icon span {
+    display: block;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform var(--dur) var(--ease);
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__icon span:first-child {
+    transform: translateY(2.75px) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__icon span:last-child {
+    transform: translateY(-2.75px) rotate(-45deg);
+  }
+
+  @media (max-width: 47.99em) {
+    .menu-toggle {
+      display: inline-flex;
+    }
+    .nav {
+      display: none;
+      flex-basis: 100%;
+      padding-bottom: var(--space-4);
+    }
+    .nav.is-open {
+      display: block;
+    }
+    .nav__list {
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--line);
+      padding-top: var(--space-2);
+    }
+    .nav__link {
+      display: block;
+      padding: 0.8rem 0;
+      font-size: 1.05rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav__link[aria-current='page'] {
+      border-bottom-color: var(--line);
+      color: var(--accent-ink);
+    }
+  }
+</style>

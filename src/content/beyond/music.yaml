@@ -1,0 +1,50 @@
+# Beyond the Lab: music
+title: Music
+lede: Classical guitar and clarinet
+order: 3
+published: true
+body: |
+  I play classical guitar and clarinet, and have studied both for many years. I
+  have completed Trinity Grade 8 in classical guitar and ABRSM Grade 6 in
+  clarinet. Practising and performing are a regular part of my week.
+
+  I keep music separate from the rest of what I do. It is not research, it is
+  not preparation for anything, and I like it that way.
+highlights:
+  - label: Classical guitar
+    detail: Trinity College London, Grade 8
+    href: /milestones#trinity-guitar-grade-8
+  - label: Clarinet in B♭
+    detail: ABRSM, Grade 6
+    href: /milestones#abrsm-clarinet-grade-6
+galleryColumns: 3
+gallery:
+  - src: ''
+    alt: ''
+    caption: ''
+    ratio: '3/2'
+    placeholder: Performance photograph
+  - src: ''
+    alt: ''
+    caption: ''
+    ratio: '3/2'
+    placeholder: Performance photograph
+  - src: ''
+    alt: ''
+    caption: ''
+    ratio: '3/2'
+    placeholder: Performance photograph
+# Optional recordings. Put audio files in public/files/ and use src, or link
+# to YouTube or SoundCloud with href. Entries without src or href are hidden.
+recordings: []
+# Example:
+#  - title: Bach, Prelude from Cello Suite No. 1 (guitar arrangement)
+#    kind: audio
+#    src: /files/bach-prelude.mp3
+#    note: Recorded at a school recital, 2026
+reflection:
+  title: On playing
+  body: ''
+notes: |
+  Add performance photographs to src/assets/images/music/ and set src on the
+  gallery entries above (e.g. music/recital-2026.jpg).

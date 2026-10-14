@@ -1,0 +1,120 @@
+---
+/**
+ * The reusable image component. Pass an image slot from a content file and it
+ * renders an optimised, responsive picture inside a frame with a fixed aspect
+ * ratio. If the slot is empty (or the file is missing) it renders a
+ * placeholder frame instead.
+ *
+ * Props:
+ *   image     an object matching imageSchema in content.config.ts
+ *   ratio     default aspect ratio for this slot (overridden by image.ratio)
+ *   sizes     the HTML `sizes` attribute, describing the rendered width
+ *   variant   'plain' | 'framed' | 'offset' (decorative outline behind)
+ *   loading   'lazy' (default) or 'eager' for above-the-fold images
+ */
+import { Picture } from 'astro:assets';
+import Placeholder from './Placeholder.astro';
+import { resolveImage } from '../lib/images';
+import { mdInline } from '../lib/markdown';
+
+type ImageSlot = {
+  src?: string;
+  alt?: string;
+  caption?: string;
+  position?: string;
+  ratio?: string;
+  placeholder?: string;
+  published?: boolean;
+};
+
+interface Props {
+  image?: ImageSlot;
+  ratio?: string;
+  sizes?: string;
+  variant?: 'plain' | 'framed' | 'offset';
+  loading?: 'lazy' | 'eager';
+  class?: string;
+  placeholder?: string;
+}
+
+const {
+  image,
+  ratio: defaultRatio = '4/3',
+  sizes = '(min-width: 72rem) 36rem, (min-width: 48em) 50vw, 100vw',
+  variant = 'framed',
+  loading = 'lazy',
+  class: className,
+  placeholder: fallbackPlaceholder,
+} = Astro.props;
+
+const ratio = image?.ratio ?? defaultRatio;
+const resolved = resolveImage(image?.src);
+const label = image?.placeholder ?? fallbackPlaceholder;
+const caption = image?.caption;
+const position = image?.position ?? '50% 50%';
+---
+
+<figure class:list={['figure', `figure--${variant}`, className]} style={`--ratio: ${ratio};`}>
+  <div class="figure__frame">
+    {
+      resolved ? (
+        <Picture
+          src={resolved}
+          alt={image?.alt ?? ''}
+          widths={[420, 720, 1080, 1600]}
+          sizes={sizes}
+          formats={['avif', 'webp']}
+          loading={loading}
+          decoding="async"
+          class="figure__img"
+          style={`object-position: ${position};`}
+        />
+      ) : (
+        <Placeholder label={label} />
+      )
+    }
+  </div>
+  {caption && <figcaption class="figure__caption sans" set:html={mdInline(caption)} />}
+</figure>
+
+<style>
+  .figure {
+    margin: 0;
+    position: relative;
+  }
+  .figure__frame {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    overflow: hidden;
+    background: var(--paper-2);
+    border-radius: var(--radius-lg);
+  }
+  .figure--framed .figure__frame {
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .figure--offset .figure__frame {
+    border-radius: var(--radius-lg);
+  }
+  .figure--offset::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(0.9rem, 0.9rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+  }
+  .figure__frame :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .figure__caption {
+    margin-top: 0.7rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+</style>

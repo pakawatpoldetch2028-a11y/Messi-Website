@@ -1,0 +1,51 @@
+# ---------------------------------------------------------------------------
+# Site-wide settings
+# Edit names, navigation and footer links here.
+# ---------------------------------------------------------------------------
+
+name: Pakawat (Messi) Poldetch
+nickname: Messi
+shortName: Pakawat Poldetch
+tagline: Understanding complexity. Making knowledge useful.
+description: >-
+  Pakawat (Messi) Poldetch is a Grade 11 student at Ruamrudee International
+  School in Bangkok, Class of 2028, interested in how complex systems work and
+  how understanding them can become useful: aquaculture research, ShrimpPulse,
+  neuroscience, economics, and a developing healthcare project.
+location: Bangkok, Thailand
+school: Ruamrudee International School
+cohort: Class of 2028
+
+# Main navigation, in order. Hrefs are site-relative.
+nav:
+  - label: Home
+    href: /
+  - label: About
+    href: /about
+  - label: Research & Projects
+    href: /work
+  - label: Beyond the Lab
+    href: /beyond
+  - label: Milestones
+    href: /milestones
+
+# Footer links. Leave `email` out (or empty) to hide it. The CV link is hidden
+# until `href` points at a real file, e.g. /files/pakawat-poldetch-cv.pdf
+linkedin: https://www.linkedin.com/in/pakawat-messi-poldetch-1aa286217/
+# email: you@example.com
+cv:
+  label: Download CV
+  href: ''
+  kind: download
+  published: false
+
+# Social preview image shown when the site is shared (optional). Put a
+# 1200x630 image in public/files and reference it as /files/og.jpg
+# ogImage: /files/og.jpg
+
+# Empty image slots show a small label naming what belongs there
+# ("Laboratory photograph"). Set to false before publishing if you would
+# rather the frames stay unlabelled.
+showPlaceholderLabels: true
+
+footerNote: Written and maintained by me.

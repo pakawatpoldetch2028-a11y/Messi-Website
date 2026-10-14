@@ -1,0 +1,124 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Figure from './Figure.astro';
+import Prose from './Prose.astro';
+import { formatDate } from '../lib/dates';
+import { href as withBase, isExternal } from '../lib/url';
+
+interface Props {
+  milestone: CollectionEntry<'milestones'>;
+  compact?: boolean;
+}
+const { milestone, compact = false } = Astro.props;
+const m = milestone.data;
+const dateLabel = m.dateLabel ?? formatDate(m.date) ?? '';
+const hasImage = !compact && m.image && m.image.published !== false && m.image.src;
+const linkExternal = m.href ? isExternal(m.href) : false;
+---
+
+<li class:list={['milestone', { 'milestone--compact': compact, 'milestone--with-image': hasImage }]} id={compact ? undefined : m.id}>
+  <div class="milestone__date sans">{dateLabel}</div>
+  <div class="milestone__body">
+    <h3 class="milestone__title">
+      {m.href ? (
+        <a href={withBase(m.href)} target={linkExternal ? '_blank' : undefined} rel={linkExternal ? 'noopener' : undefined}>{m.title}</a>
+      ) : (
+        m.title
+      )}
+    </h3>
+    {(m.outcome || m.organisation) && (
+      <p class="milestone__meta sans">
+        {m.outcome && <span class="milestone__outcome">{m.outcome}</span>}
+        {m.outcome && m.organisation && <span aria-hidden="true"> · </span>}
+        {m.organisation && <span>{m.organisation}</span>}
+      </p>
+    )}
+    {!compact && m.description && <Prose text={m.description} muted class="milestone__desc" />}
+    {!compact && m.details && m.details.length > 0 && (
+      <ul class="milestone__details">
+        {m.details.map((d) => <li>{d}</li>)}
+      </ul>
+    )}
+    {!compact && m.href && m.hrefLabel && (
+      <p class="milestone__link sans">
+        <a href={withBase(m.href)} target={linkExternal ? '_blank' : undefined} rel={linkExternal ? 'noopener' : undefined}>{m.hrefLabel}</a>
+      </p>
+    )}
+  </div>
+  {hasImage && (
+    <div class="milestone__image">
+      <Figure image={m.image} ratio="4/3" sizes="12rem" variant="framed" />
+    </div>
+  )}
+</li>
+
+<style>
+  .milestone {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.35rem var(--space-5);
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--line);
+  }
+  .milestone--compact {
+    padding: var(--space-4) 0;
+  }
+  .milestone__date {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-top: 0.3rem;
+  }
+  .milestone__title {
+    font-size: var(--step-1);
+    font-weight: 450;
+    margin: 0 0 0.25rem;
+  }
+  .milestone--compact .milestone__title {
+    font-size: var(--step-0);
+  }
+  .milestone__title a {
+    color: var(--ink);
+    text-decoration-color: var(--line-strong);
+  }
+  .milestone__title a:hover {
+    text-decoration-color: var(--accent);
+  }
+  .milestone__meta {
+    font-size: 0.84rem;
+    color: var(--ink-2);
+    margin: 0 0 0.4rem;
+  }
+  .milestone__outcome {
+    color: var(--accent-ink);
+    font-weight: 540;
+  }
+  .milestone__body :global(.milestone__desc) {
+    font-size: 0.95rem;
+  }
+  .milestone__details {
+    margin: 0.5rem 0 0;
+    padding-left: 1.1em;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+  }
+  .milestone__details li + li {
+    margin-top: 0.2em;
+  }
+  .milestone__link {
+    margin: 0.6rem 0 0;
+    font-size: 0.85rem;
+  }
+  .milestone__image {
+    max-width: 12rem;
+  }
+  @media (min-width: 48em) {
+    .milestone {
+      grid-template-columns: 9rem 1fr;
+    }
+    .milestone--with-image {
+      grid-template-columns: 9rem 1fr 11rem;
+    }
+  }
+</style>

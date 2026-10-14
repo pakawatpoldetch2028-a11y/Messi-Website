@@ -1,0 +1,173 @@
+# ---------------------------------------------------------------------------
+# Case study: ShrimpPulse
+# ---------------------------------------------------------------------------
+
+title: ShrimpPulse
+area: Decision-support software for shrimp farmers
+summary: >-
+  A chatbot that gives Thai shrimp farmers practical, accessible answers about
+  disease, water quality, biosecurity, nutrition, and the appropriate use of
+  antimicrobials and chemicals.
+order: 2
+published: true
+status:
+  label: Publicly released · version 4.0 in development
+  tone: active
+period: 2025 – present
+role: Creator and developer
+
+card:
+  src: ''
+  alt: ''
+  ratio: '4/3'
+  placeholder: ShrimpPulse interface
+
+hero:
+  src: ''
+  alt: ''
+  caption: ''
+  ratio: '16/9'
+  placeholder: ShrimpPulse in use
+
+intro: |
+  ShrimpPulse is a chatbot for Thai shrimp farmers. A farmer can describe what
+  they are seeing in a pond, in plain language, and get an answer grounded in
+  scientific and regulatory knowledge: what the signs might indicate, which
+  water-quality parameters to check, which treatments are appropriate and which
+  are not permitted, and when to seek expert help.
+
+steps:
+  - key: question
+    title: The problem
+    body: |
+      The knowledge that would help a shrimp farmer make a better decision
+      mostly exists already. It is in research papers, in regulatory guidance on
+      antimicrobial and chemical use, in water-quality standards, and in the
+      experience of fisheries scientists. The problem is distance. That
+      knowledge is scattered, often technical, and rarely available at nine in
+      the evening when a pond looks wrong and a decision cannot wait.
+
+      Could a tool close that gap, and do it carefully enough that it helps
+      rather than adds to the noise?
+  - key: approach
+    title: Approach
+    body: |
+      ShrimpPulse draws on a curated body of specialised knowledge covering
+      disease, appropriate antimicrobial and chemical use, water quality,
+      biosecurity, nutrition, and farm management. It is designed to answer in
+      everyday language, to say what to check rather than only what might be
+      wrong, to be explicit about which substances are permitted, and to point
+      towards a specialist when a question is beyond what a chatbot should
+      answer.
+
+      The project has moved through several versions. Each one was shaped by
+      what happened when real farmers used the previous one.
+  - key: contribution
+    title: My contribution
+    body: |
+      ShrimpPulse is my project. I started it and have led its development
+      through each version, drawing on what I learned from aquaculture research
+      at Kasetsart University to decide what the tool should know and how
+      cautious it should be.
+  - key: evidence
+    title: Evidence and status
+    body: |
+      ShrimpPulse is publicly released and in use, and a feedback form has been
+      collecting responses from users since September 2026. The timeline below
+      records what has actually happened.
+
+      What I am not claiming: releasing a tool does not prove that it changes
+      how farmers use antimicrobials, and I have not measured that. Any
+      statement about impact belongs after the evidence, not before it.
+  - key: next
+    title: The next question
+    body: |
+      The hardest problem turned out not to be technical. Why does one farmer
+      act on advice while another ignores it? That is a question about
+      incentives, trust, and institutions as much as about biology, and it is
+      where my interest in [economics](/beyond#economics) meets this project.
+
+timelineHeading: Timeline
+timeline:
+  - date: 2025-12
+    title: Development of ShrimpPulse 2.0 begins
+  - date: 2026-02
+    title: Field testing begins
+    body: First use by farmers outside the development group.
+  - date: 2026-04
+    title: Public release
+  - date: 2026-08
+    title: Work on ShrimpPulse 4.0 begins
+  - date: 2026-09
+    title: User feedback form launched
+
+# Measured results. Leave empty (or published: false) until you have evidence.
+metrics: []
+# Example:
+#  - label: Users
+#    value: '—'
+#    note: As of October 2026
+#    published: false
+
+galleries:
+  - heading: Interface
+    description: Screenshots of the chatbot in use.
+    columns: 3
+    images:
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '9/16'
+        placeholder: Screenshot
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '9/16'
+        placeholder: Screenshot
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '9/16'
+        placeholder: Screenshot
+  - heading: In the field
+    description: Photographs from field testing and visits to farms.
+    columns: 2
+    images:
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '3/2'
+        placeholder: Field photograph
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '3/2'
+        placeholder: Field photograph
+
+# A demonstration video. Provide a YouTube link or a file in public/files.
+video:
+  title: ShrimpPulse demonstration
+  youtube: ''
+  src: ''
+  caption: ''
+  published: true
+
+links: []
+# Example:
+#  - label: Try ShrimpPulse
+#    href: https://example.com
+#    kind: site
+
+related:
+  - label: The research behind it
+    href: /work/aquaculture-research
+    kind: internal
+
+notes: |
+  EDITING NOTES (never shown on the site)
+  - Confirm the role line ("Creator and developer"). If others built parts of
+    the software, name them in the "My contribution" step.
+  - Add technical details (platform, model, knowledge sources) to the
+    "Approach" step if you want them public.
+  - Add a public link under `links` when the tool has a public URL.
+  - Fill in `metrics` only with numbers you can support.

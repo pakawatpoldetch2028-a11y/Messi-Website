@@ -1,0 +1,237 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import Prose from '../components/Prose.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Button from '../components/Button.astro';
+
+const entry = await getEntry('about', 'about');
+if (!entry) throw new Error('src/content/about.yaml is missing');
+const about = entry.data;
+const reflection = about.reflection?.body?.trim() ? about.reflection : undefined;
+const activityPhoto = about.activityPhoto && about.activityPhoto.published !== false ? about.activityPhoto : undefined;
+---
+
+<Base title={about.metaTitle ?? 'About'} description={about.metaDescription}>
+  <section class="about-hero">
+    <div class="wrap about-hero__grid">
+      <div class="about-hero__media">
+        <Figure
+          image={about.portrait}
+          ratio="3/4"
+          variant="offset"
+          loading="eager"
+          sizes="(min-width: 60em) 26rem, (min-width: 48em) 40vw, 90vw"
+        />
+      </div>
+      <div class="about-hero__text">
+        <p class="eyebrow">{about.heading}</p>
+        <Prose text={about.opening} lead />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--rule">
+    <div class="wrap">
+      <SectionHeading title={about.interests.heading} />
+      <dl class="ledger">
+        {
+          about.interests.items.map((item) => (
+            <div class="ledger__row">
+              <dt class="ledger__term">{item.title}</dt>
+              <dd class="ledger__desc">
+                <Prose text={item.body} />
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap studies__grid">
+      <div class="studies">
+        <p class="eyebrow">{about.studies.heading}</p>
+        <p class="studies__programme">{about.studies.programme}</p>
+        <ul class="plain-list studies__list sans">
+          {about.studies.items.map((s) => <li>{s}</li>)}
+        </ul>
+        {about.studies.note && <p class="studies__note">{about.studies.note}</p>}
+      </div>
+      {
+        activityPhoto && (
+          <div class="studies__photo">
+            <Figure image={activityPhoto} ratio="3/2" sizes="(min-width: 60em) 40rem, 100vw" />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section section--tint questions">
+    <div class="wrap">
+      <SectionHeading title={about.questions.heading} intro={about.questions.intro} align="split" />
+      <ol class="plain-list questions__list">
+        {
+          about.questions.items.map((q, i) => (
+            <li class="questions__item">
+              <span class="questions__index sans">{String(i + 1).padStart(2, '0')}</span>
+              <p class="questions__text">{q}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section directions">
+    <div class="wrap directions__grid">
+      <div>
+        <SectionHeading title={about.directions.heading} />
+      </div>
+      <div>
+        <Prose text={about.directions.body} lead />
+        <p class="directions__link">
+          <Button href="/work" variant="link">See the work so far</Button>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {
+    reflection && (
+      <section class="section section--rule reflection">
+        <div class="wrap--narrow">
+          <SectionHeading title={reflection.title ?? 'In my own words'} />
+          <Prose text={reflection.body} />
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .about-hero {
+    padding-block: clamp(2.5rem, 6vw, 5rem) var(--space-8);
+  }
+  .about-hero__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  @media (min-width: 48em) {
+    .about-hero__grid {
+      grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1.2fr);
+      gap: clamp(2rem, 6vw, 5rem);
+    }
+  }
+  .about-hero__media {
+    max-width: 24rem;
+    width: 100%;
+  }
+  .about-hero__text :global(.prose--lead) {
+    max-width: 56ch;
+  }
+  .ledger__desc :global(.prose) {
+    max-width: none;
+  }
+
+  .ledger {
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .ledger__row {
+    display: grid;
+    gap: var(--space-3) var(--space-6);
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 48em) {
+    .ledger__row {
+      grid-template-columns: minmax(10rem, 1fr) 2.2fr;
+    }
+  }
+  .ledger__term {
+    font-size: var(--step-1);
+    font-weight: 500;
+  }
+  .ledger__desc {
+    margin: 0;
+    color: var(--ink-2);
+  }
+
+  .studies__grid {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+  @media (min-width: 60em) {
+    .studies__grid {
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--space-8);
+    }
+  }
+  .studies__programme {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-4);
+  }
+  .studies__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .studies__list li {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+  .studies__note {
+    margin-top: var(--space-4);
+    font-size: 0.9rem;
+    color: var(--ink-3);
+  }
+
+  .questions__list {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .questions__item {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-4);
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--line-strong);
+    align-items: baseline;
+  }
+  .questions__index {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .questions__text {
+    font-size: var(--step-2);
+    line-height: 1.3;
+    margin: 0;
+    max-width: 34ch;
+    text-wrap: pretty;
+  }
+
+  .directions__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 60em) {
+    .directions__grid {
+      grid-template-columns: 1fr 1.6fr;
+      gap: var(--space-8);
+    }
+  }
+  .directions__link {
+    margin-top: var(--space-5);
+  }
+</style>

@@ -1,0 +1,373 @@
+/* ------------------------------------------------------------------------
+   Global styles
+   Fonts: Newsreader (display and reading) and Inter (interface labels).
+   Colour and spacing are custom properties so the whole site can be retuned
+   from this one block.
+   ------------------------------------------------------------------------ */
+
+@import '@fontsource-variable/newsreader/opsz.css';
+@import '@fontsource-variable/newsreader/opsz-italic.css';
+@import '@fontsource-variable/inter/index.css';
+
+:root {
+  color-scheme: light dark;
+
+  /* Palette: warm paper, dark ink, a sea-green accent, a little terracotta. */
+  --paper: #f7f3ec;
+  --paper-2: #efe9dd;
+  --paper-3: #e6ded0;
+  --ink: #1c1a16;
+  --ink-2: #4b463e;
+  --ink-3: #78716a;
+  --line: #d8d0c2;
+  --line-strong: #bfb5a4;
+  --accent: #1d6b66;
+  --accent-ink: #0f4a46;
+  --accent-soft: #dcebe8;
+  --accent-2: #a9552b;
+  --accent-2-soft: #f3e2d7;
+  --focus: #1d6b66;
+
+  --font-serif: 'Newsreader Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --measure: 66ch;
+  --wrap: 72rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6.5rem;
+
+  --radius: 4px;
+  --radius-lg: 10px;
+
+  --step--1: clamp(0.88rem, 0.85rem + 0.15vw, 0.95rem);
+  --step-0: clamp(1.06rem, 1rem + 0.3vw, 1.2rem);
+  --step-1: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --step-3: clamp(1.9rem, 1.5rem + 1.8vw, 2.75rem);
+  --step-4: clamp(2.4rem, 1.8rem + 3vw, 4rem);
+
+  --shadow: 0 1px 2px rgb(28 26 22 / 0.06), 0 8px 24px -12px rgb(28 26 22 / 0.18);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 220ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #161614;
+    --paper-2: #1e1d1a;
+    --paper-3: #27251f;
+    --ink: #ece6da;
+    --ink-2: #c5bdb0;
+    --ink-3: #918a7d;
+    --line: #34312b;
+    --line-strong: #4b463d;
+    --accent: #6cc3bb;
+    --accent-ink: #9fe0d9;
+    --accent-soft: #1b2f2d;
+    --accent-2: #e0956b;
+    --accent-2-soft: #3a261b;
+    --focus: #8bd6cf;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  }
+}
+
+:root[data-theme='dark'] {
+  --paper: #161614;
+  --paper-2: #1e1d1a;
+  --paper-3: #27251f;
+  --ink: #ece6da;
+  --ink-2: #c5bdb0;
+  --ink-3: #918a7d;
+  --line: #34312b;
+  --line-strong: #4b463d;
+  --accent: #6cc3bb;
+  --accent-ink: #9fe0d9;
+  --accent-soft: #1b2f2d;
+  --accent-2: #e0956b;
+  --accent-2-soft: #3a261b;
+  --focus: #8bd6cf;
+}
+
+/* ---- Reset and base ---------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-feature-settings: 'kern', 'liga', 'onum';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--step-4);
+  font-weight: 450;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: var(--step-3);
+}
+h3 {
+  font-size: var(--step-2);
+}
+h4 {
+  font-size: var(--step-1);
+}
+
+p {
+  margin: 0 0 1em;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  transition: text-decoration-color var(--dur) var(--ease);
+}
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: var(--space-7) 0;
+}
+
+blockquote {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding-left: 1.25em;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--paper-2);
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius);
+}
+
+/* ---- Utilities --------------------------------------------------------- */
+
+.wrap {
+  width: min(100% - 2 * var(--gutter), var(--wrap));
+  margin-inline: auto;
+}
+
+.wrap--narrow {
+  width: min(100% - 2 * var(--gutter), 48rem);
+  margin-inline: auto;
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.sans {
+  font-family: var(--font-sans);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+/* Section rhythm */
+.section {
+  padding-block: var(--space-8);
+}
+.section + .section {
+  padding-top: 0;
+}
+.section--rule {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-8) !important;
+}
+.section--tint {
+  background: var(--paper-2);
+  padding-block: var(--space-8) !important;
+}
+.section--tint + .section {
+  padding-top: var(--space-8);
+}
+
+/* Small-caps interface labels */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 560;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 var(--space-3);
+}
+.eyebrow--accent {
+  color: var(--accent);
+}
+
+/* Rich text generated from markdown */
+.prose {
+  max-width: var(--measure);
+}
+.prose p,
+.prose ul,
+.prose ol {
+  margin-bottom: 1em;
+}
+.prose > :last-child {
+  margin-bottom: 0;
+}
+.prose li + li {
+  margin-top: 0.35em;
+}
+.prose strong {
+  font-weight: 600;
+}
+.prose--lead {
+  font-size: var(--step-1);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.prose--muted {
+  color: var(--ink-2);
+}
+
+/* Lists without bullets */
+.plain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Grid helpers */
+.grid {
+  display: grid;
+  gap: var(--space-5);
+}
+.grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+.grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+/* ---- Motion ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media print {
+  .site-header,
+  .site-footer {
+    display: none;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

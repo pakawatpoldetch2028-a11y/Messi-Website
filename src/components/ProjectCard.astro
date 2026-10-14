@@ -1,0 +1,94 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Figure from './Figure.astro';
+import StatusPill from './StatusPill.astro';
+import { href } from '../lib/url';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  ratio?: string;
+  eager?: boolean;
+}
+const { project, ratio = '4/3', eager = false } = Astro.props;
+const { data } = project;
+const image = data.card ?? data.hero;
+const url = href(`/work/${project.id}`);
+---
+
+<article class="card">
+  <a class="card__media" href={url} tabindex="-1" aria-hidden="true">
+    <Figure
+      image={image}
+      ratio={ratio}
+      sizes="(min-width: 72rem) 22rem, (min-width: 48em) 33vw, 100vw"
+      loading={eager ? 'eager' : 'lazy'}
+      placeholder={data.title}
+    />
+  </a>
+  <div class="card__body">
+    <p class="eyebrow">{data.area}</p>
+    <h3 class="card__title">
+      <a href={url}>{data.title}</a>
+    </h3>
+    <p class="card__summary">{data.summary}</p>
+    <div class="card__foot">
+      <StatusPill label={data.status.label} tone={data.status.tone} />
+    </div>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    height: 100%;
+  }
+  .card__media {
+    display: block;
+    border-radius: var(--radius-lg);
+  }
+  .card__media :global(.figure__frame) {
+    transition: transform var(--dur) var(--ease);
+  }
+  .card:hover .card__media :global(.figure__frame) {
+    transform: translateY(-2px);
+  }
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+  }
+  .card__body .eyebrow {
+    margin-bottom: 0;
+  }
+  .card__title {
+    font-size: var(--step-1);
+    margin: 0;
+  }
+  .card__title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .card {
+    position: relative;
+  }
+  .card__title a:hover {
+    color: var(--accent-ink);
+  }
+  .card__summary {
+    color: var(--ink-2);
+    font-size: 0.98rem;
+    margin: 0;
+  }
+  .card__foot {
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+</style>

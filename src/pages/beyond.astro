@@ -1,0 +1,313 @@
+---
+import Base from '../layouts/Base.astro';
+import Prose from '../components/Prose.astro';
+import Gallery from '../components/Gallery.astro';
+import { getPublishedBeyond } from '../lib/content';
+import { href as withBase, isExternal } from '../lib/url';
+
+const sections = await getPublishedBeyond();
+const description =
+  'Beyond the lab: economics, history and philosophy, music, and public speaking in the life of Pakawat (Messi) Poldetch.';
+---
+
+<Base title="Beyond the Lab" description={description}>
+  <section class="page-head">
+    <div class="wrap page-head__grid">
+      <div>
+        <p class="eyebrow">Beyond the lab</p>
+        <h1>Other ways of asking</h1>
+      </div>
+      <div class="page-head__intro prose prose--lead">
+        <p>
+          Not everything I do is research, and not everything needs to be. These are the other
+          parts of my life: some of them feed the same questions from a different direction, and
+          some are simply things I care about.
+        </p>
+      </div>
+      <nav class="jump sans" aria-label="Sections on this page">
+        {sections.map((s) => <a href={`#${s.id}`}>{s.data.title}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {
+    sections.map((section, i) => {
+      const d = section.data;
+      const highlights = (d.highlights ?? []).filter((h) => h.published !== false);
+      const items = (d.items ?? []).filter((it) => it.published !== false);
+      const recordings = (d.recordings ?? []).filter((r) => r.published !== false && (r.src || r.href));
+      const gallery = (d.gallery ?? []).filter((g) => g.published !== false);
+      const reflection = d.reflection?.body?.trim() ? d.reflection : undefined;
+      return (
+        <section class:list={['section', 'beyond', { 'section--rule': true, 'beyond--tint': i % 2 === 1 }]} id={section.id}>
+          <div class="wrap beyond__grid">
+            <header class="beyond__head">
+              <span class="beyond__index sans">{String(i + 1).padStart(2, '0')}</span>
+              <h2 class="beyond__title">{d.title}</h2>
+              <p class="beyond__lede">{d.lede}</p>
+            </header>
+
+            <div class="beyond__body">
+              <Prose text={d.body} />
+
+              {highlights.length > 0 && (
+                <ul class="plain-list highlights">
+                  {highlights.map((h) => (
+                    <li class="highlight">
+                      {h.href ? (
+                        <a class="highlight__label" href={withBase(h.href)} target={isExternal(h.href) ? '_blank' : undefined} rel={isExternal(h.href) ? 'noopener' : undefined}>
+                          {h.label}
+                        </a>
+                      ) : (
+                        <span class="highlight__label">{h.label}</span>
+                      )}
+                      {h.detail && <span class="highlight__detail sans">{h.detail}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {items.length > 0 && (
+                <ul class="plain-list items">
+                  {items.map((it) => (
+                    <li class="item">
+                      <div class="item__head">
+                        <h3 class="item__title">
+                          {it.href ? (
+                            <a href={withBase(it.href)} target={isExternal(it.href) ? '_blank' : undefined} rel={isExternal(it.href) ? 'noopener' : undefined}>
+                              {it.title}
+                            </a>
+                          ) : (
+                            it.title
+                          )}
+                        </h3>
+                        {(it.role || it.period) && (
+                          <p class="item__meta sans">
+                            {it.role}
+                            {it.role && it.period && ' · '}
+                            {it.period}
+                          </p>
+                        )}
+                      </div>
+                      {it.description && <Prose text={it.description} muted class="item__desc" />}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {recordings.length > 0 && (
+                <div class="recordings">
+                  <p class="eyebrow">Recordings</p>
+                  <ul class="plain-list recordings__list">
+                    {recordings.map((r) => (
+                      <li class="recording">
+                        <p class="recording__title">{r.title}</p>
+                        {r.note && <p class="recording__note sans">{r.note}</p>}
+                        {r.src && r.kind === 'audio' && (
+                          <audio controls preload="none" src={withBase(r.src)}>
+                            <a href={withBase(r.src)}>Download the recording</a>
+                          </audio>
+                        )}
+                        {r.src && r.kind === 'video' && (
+                          <video controls preload="metadata" src={withBase(r.src)} />
+                        )}
+                        {!r.src && r.href && (
+                          <p class="recording__link sans">
+                            <a href={r.href} target="_blank" rel="noopener">
+                              Listen
+                            </a>
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {reflection && (
+                <div class="reflection">
+                  <p class="eyebrow">{reflection.title ?? 'A reflection'}</p>
+                  <Prose text={reflection.body} />
+                </div>
+              )}
+            </div>
+
+            {gallery.length > 0 && (
+              <div class="beyond__gallery">
+                <Gallery images={gallery} columns={d.galleryColumns} ratio="3/2" />
+              </div>
+            )}
+          </div>
+        </section>
+      );
+    })
+  }
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 6vw, 5rem) var(--space-7);
+  }
+  .page-head__grid {
+    display: grid;
+    gap: var(--space-5);
+    align-items: end;
+  }
+  @media (min-width: 60em) {
+    .page-head__grid {
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--space-5) var(--space-8);
+    }
+    .jump {
+      grid-column: 1 / -1;
+    }
+  }
+  .page-head h1 {
+    margin-bottom: 0;
+  }
+  .page-head__intro {
+    color: var(--ink-2);
+  }
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .jump a {
+    font-size: 0.82rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .jump a:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  .beyond--tint {
+    background: var(--paper-2);
+    padding-bottom: var(--space-8);
+  }
+  .beyond__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 60em) {
+    .beyond__grid {
+      grid-template-columns: minmax(12rem, 1fr) 2fr;
+      gap: var(--space-6) var(--space-8);
+    }
+    .beyond__head {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+    }
+    .beyond__gallery {
+      grid-column: 1 / -1;
+    }
+  }
+  .beyond__index {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: var(--space-3);
+  }
+  .beyond__title {
+    margin-bottom: 0.3rem;
+  }
+  .beyond__lede {
+    font-style: italic;
+    color: var(--ink-2);
+    font-size: var(--step-1);
+    margin: 0;
+  }
+  .beyond__body {
+    display: grid;
+    gap: var(--space-6);
+    max-width: var(--measure);
+  }
+
+  .highlights {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .highlight {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem var(--space-4);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .highlight__label {
+    color: var(--ink);
+  }
+  .highlight__detail {
+    font-size: 0.82rem;
+    color: var(--accent-ink);
+    font-weight: 540;
+  }
+
+  .items {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .item {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .item__title {
+    font-size: var(--step-1);
+    font-weight: 450;
+    margin: 0;
+  }
+  .item__title a {
+    color: var(--ink);
+    text-decoration-color: var(--line-strong);
+  }
+  .item__meta {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+    margin: 0;
+  }
+  .item :global(.item__desc) {
+    font-size: 0.95rem;
+  }
+
+  .recordings__list {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .recording__title {
+    margin: 0 0 0.2rem;
+  }
+  .recording__note {
+    font-size: 0.8rem;
+    color: var(--ink-3);
+    margin: 0 0 0.5rem;
+  }
+  .recording audio,
+  .recording video {
+    width: 100%;
+    max-width: 32rem;
+  }
+  .recording__link {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .reflection {
+    padding: var(--space-5);
+    border-left: 2px solid var(--accent);
+    background: color-mix(in oklab, var(--accent-soft) 55%, transparent);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  }
+</style>

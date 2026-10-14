@@ -1,0 +1,68 @@
+---
+/**
+ * The frame shown in an image slot that has no photograph yet. It is drawn
+ * with CSS and inline SVG so it never produces a broken-image icon.
+ */
+import { getSite } from '../lib/content';
+
+interface Props {
+  label?: string;
+}
+const { label } = Astro.props;
+const site = await getSite();
+const showLabel = site.showPlaceholderLabels && label;
+---
+
+<div class="placeholder" role="img" aria-label={label ? `Placeholder: ${label}` : 'Image placeholder'}>
+  <svg class="placeholder__art" viewBox="0 0 200 200" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="ph-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M20 0H0V20" fill="none" stroke="currentColor" stroke-width="0.4" />
+      </pattern>
+    </defs>
+    <rect width="200" height="200" fill="url(#ph-grid)" />
+    <g fill="none" stroke="currentColor" stroke-width="0.8">
+      <path d="M60 130 L95 88 L140 112 L120 60 L95 88 M60 130 L120 150 L140 112 M120 60 L150 50" />
+    </g>
+    <g fill="currentColor">
+      <circle cx="60" cy="130" r="2.6" />
+      <circle cx="95" cy="88" r="2.6" />
+      <circle cx="140" cy="112" r="2.6" />
+      <circle cx="120" cy="60" r="2.6" />
+      <circle cx="120" cy="150" r="2.6" />
+      <circle cx="150" cy="50" r="2.6" />
+    </g>
+  </svg>
+  {showLabel && <span class="placeholder__label sans">{label}</span>}
+</div>
+
+<style>
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: end start;
+    background:
+      linear-gradient(160deg, var(--paper-2), var(--paper-3));
+    color: color-mix(in oklab, var(--ink-3) 55%, transparent);
+    overflow: hidden;
+  }
+  .placeholder__art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .placeholder__label {
+    position: relative;
+    margin: 0.75rem;
+    padding: 0.3rem 0.55rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: color-mix(in oklab, var(--paper) 80%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+</style>

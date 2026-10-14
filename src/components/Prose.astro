@@ -1,0 +1,14 @@
+---
+/** Renders a markdown string from a content file as rich text. */
+import { md } from '../lib/markdown';
+
+interface Props {
+  text?: string;
+  lead?: boolean;
+  muted?: boolean;
+  class?: string;
+}
+const { text, lead = false, muted = false, class: className } = Astro.props;
+---
+
+{text && <div class:list={['prose', { 'prose--lead': lead, 'prose--muted': muted }, className]} set:html={md(text)} />}

@@ -1,0 +1,376 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+import Gallery from '../../components/Gallery.astro';
+import Prose from '../../components/Prose.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import Timeline from '../../components/Timeline.astro';
+import Publication from '../../components/Publication.astro';
+import LinkList from '../../components/LinkList.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { getPublishedProjects, getPublishedPublications, pickByIds } from '../../lib/content';
+import { href } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => data.published);
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const data = project.data;
+
+const all = await getPublishedProjects();
+const index = all.findIndex((p) => p.id === project.id);
+const prev = index > 0 ? all[index - 1] : undefined;
+const next = index < all.length - 1 ? all[index + 1] : undefined;
+
+const publications = data.publications ? pickByIds(await getPublishedPublications(), data.publications) : [];
+const metrics = (data.metrics ?? []).filter((m) => m.published !== false);
+const galleries = (data.galleries ?? []).filter((g) => g.published !== false);
+const hasVideo = data.video && data.video.published !== false && (data.video.youtube || data.video.src);
+const hasHero = data.hero && data.hero.published !== false;
+
+const stepLabels: Record<string, string> = {
+  question: 'Question',
+  approach: 'Approach',
+  contribution: 'My contribution',
+  evidence: 'Evidence & status',
+  next: 'Next question',
+};
+---
+
+<Base title={data.title} description={data.summary}>
+  <article>
+    <header class="case-head">
+      <div class="wrap">
+        <p class="case-head__crumb sans">
+          <a href={href('/work')}>Research &amp; projects</a>
+          <span aria-hidden="true"> / </span>
+          <span>{data.area}</span>
+        </p>
+        <h1 class="case-head__title">{data.title}</h1>
+        <p class="case-head__summary">{data.summary}</p>
+
+        <dl class="case-meta sans">
+          <div>
+            <dt>Status</dt>
+            <dd><StatusPill label={data.status.label} tone={data.status.tone} /></dd>
+          </div>
+          {data.role && (
+            <div>
+              <dt>My role</dt>
+              <dd>{data.role}</dd>
+            </div>
+          )}
+          {data.period && (
+            <div>
+              <dt>Period</dt>
+              <dd>{data.period}</dd>
+            </div>
+          )}
+          {data.affiliation && (
+            <div>
+              <dt>With</dt>
+              <dd>{data.affiliation}</dd>
+            </div>
+          )}
+        </dl>
+      </div>
+    </header>
+
+    {
+      hasHero && (
+        <div class="wrap case-hero">
+          <Figure image={data.hero} ratio="16/9" loading="eager" sizes="(min-width: 72rem) 72rem, 100vw" />
+        </div>
+      )
+    }
+
+    <section class="section case-intro">
+      <div class="wrap case-intro__grid">
+        <p class="eyebrow">In short</p>
+        <Prose text={data.intro} lead />
+      </div>
+    </section>
+
+    <section class="section section--rule">
+      <div class="wrap">
+        <ol class="plain-list steps">
+          {
+            data.steps.map((step) => (
+              <li class="step" id={step.key}>
+                <div class="step__rail">
+                  <span class="step__label sans">{stepLabels[step.key] ?? step.key}</span>
+                </div>
+                <div class="step__content">
+                  <h2 class="step__title">{step.title}</h2>
+                  <Prose text={step.body} />
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    {
+      data.timeline && data.timeline.length > 0 && (
+        <section class="section section--tint">
+          <div class="wrap aside-grid">
+            <div>
+              <SectionHeading title={data.timelineHeading ?? 'Timeline'} />
+              {metrics.length > 0 && (
+                <dl class="metrics sans">
+                  {metrics.map((m) => (
+                    <div class="metric">
+                      <dt>{m.label}</dt>
+                      <dd>
+                        <span class="metric__value">{m.value}</span>
+                        {m.note && <span class="metric__note">{m.note}</span>}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </div>
+            <Timeline items={data.timeline} />
+          </div>
+        </section>
+      )
+    }
+
+    {
+      publications.length > 0 && (
+        <section class="section section--rule">
+          <div class="wrap aside-grid">
+            <div>
+              <SectionHeading title={data.publicationsHeading ?? 'Publications'} intro={data.publicationsNote} />
+            </div>
+            <div class="pubs">
+              {publications.map((pub) => (
+                <Publication publication={pub} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      galleries.map((g) => (
+        <section class="section section--rule">
+          <div class="wrap">
+            <SectionHeading title={g.heading} intro={g.description} level={2} align="split" />
+            <Gallery images={g.images} columns={g.columns} ratio="4/3" />
+          </div>
+        </section>
+      ))
+    }
+
+    {
+      (hasVideo || data.video) && (
+        <section class="section section--rule">
+          <div class="wrap">
+            <SectionHeading title={data.video?.title ?? 'Demonstration'} align="split" />
+            <VideoEmbed video={data.video} placeholder={hasVideo ? undefined : 'Demonstration video'} />
+          </div>
+        </section>
+      )
+    }
+
+    <footer class="section section--rule case-foot">
+      <div class="wrap case-foot__grid">
+        <div class="case-foot__links">
+          <LinkList heading="Links" links={data.links} />
+          <LinkList heading="Related" links={data.related} />
+        </div>
+        <nav class="case-nav" aria-label="Other case studies">
+          {prev && (
+            <a class="case-nav__link" href={href(`/work/${prev.id}`)}>
+              <span class="eyebrow">Previous</span>
+              <span class="case-nav__title">{prev.data.title}</span>
+            </a>
+          )}
+          {next && (
+            <a class="case-nav__link case-nav__link--next" href={href(`/work/${next.id}`)}>
+              <span class="eyebrow">Next</span>
+              <span class="case-nav__title">{next.data.title}</span>
+            </a>
+          )}
+        </nav>
+      </div>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .case-head {
+    padding-block: clamp(2rem, 5vw, 4rem) var(--space-6);
+  }
+  .case-head__crumb {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+    margin-bottom: var(--space-5);
+  }
+  .case-head__crumb a {
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .case-head__title {
+    max-width: 18ch;
+  }
+  .case-head__summary {
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink-2);
+    max-width: 56ch;
+    margin-bottom: var(--space-6);
+  }
+  .case-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-7);
+    margin: 0;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .case-meta dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 0.35rem;
+  }
+  .case-meta dd {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .case-hero {
+    margin-bottom: var(--space-6);
+  }
+
+  .case-intro__grid {
+    display: grid;
+    gap: var(--space-3);
+  }
+  @media (min-width: 60em) {
+    .case-intro__grid {
+      grid-template-columns: 10rem 1fr;
+      gap: var(--space-6);
+    }
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .step {
+    display: grid;
+    gap: var(--space-3);
+  }
+  @media (min-width: 60em) {
+    .step {
+      grid-template-columns: 10rem 1fr;
+      gap: var(--space-6);
+    }
+    .step__rail {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+    }
+  }
+  .step__label {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0.3rem 0;
+    border-top: 2px solid var(--accent);
+  }
+  .step__title {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .aside-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 60em) {
+    .aside-grid {
+      grid-template-columns: 1fr 1.8fr;
+      gap: var(--space-8);
+    }
+  }
+  .metrics {
+    display: grid;
+    gap: var(--space-4);
+    margin: var(--space-5) 0 0;
+  }
+  .metric dt {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .metric dd {
+    margin: 0.2rem 0 0;
+  }
+  .metric__value {
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+  .metric__note {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--ink-3);
+    margin-top: 0.3rem;
+  }
+  .pubs {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .case-foot__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 48em) {
+    .case-foot__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+  }
+  .case-foot__links {
+    display: grid;
+    gap: var(--space-5);
+    align-content: start;
+  }
+  .case-nav {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .case-nav__link {
+    display: block;
+    padding: var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color var(--dur) var(--ease);
+  }
+  .case-nav__link:hover {
+    border-color: var(--accent);
+  }
+  .case-nav__link .eyebrow {
+    margin-bottom: 0.3rem;
+  }
+  .case-nav__title {
+    font-size: var(--step-1);
+  }
+</style>

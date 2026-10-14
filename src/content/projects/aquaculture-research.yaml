@@ -1,0 +1,133 @@
+# ---------------------------------------------------------------------------
+# Case study: aquaculture research and antimicrobial resistance
+# Steps follow: question -> approach -> my contribution -> evidence -> next
+# ---------------------------------------------------------------------------
+
+title: Aquatic animal health and antimicrobial resistance
+area: Aquaculture research
+summary: >-
+  Research on shrimp health and nutrition with the Faculty of Fisheries at
+  Kasetsart University, now extending into antibiotics and antimicrobial
+  resistance in aquaculture.
+order: 1
+published: true
+status:
+  label: Ongoing research
+  tone: active
+role: Student researcher and co-author
+affiliation: Faculty of Fisheries, Kasetsart University, Bangkok
+# period: "2025 – present"   # add when you want a date range shown
+
+hero:
+  src: ''
+  alt: ''
+  caption: ''
+  ratio: '16/9'
+  placeholder: Laboratory or pond photograph
+
+intro: |
+  Shrimp farming supports a great many livelihoods in Thailand, and its largest
+  risk is disease. Keeping farmed shrimp healthy is a scientific problem, but
+  every answer to it eventually becomes a decision made at the edge of a pond:
+  what to feed, what to treat, when to harvest. That is why this area interests
+  me. It is where biological mechanism, farming economics, and community
+  concerns about antibiotics meet.
+
+steps:
+  - key: question
+    title: The question
+    body: |
+      When a disease outbreak starts in a pond, a farmer has to decide quickly.
+      Antibiotics are a tempting answer, and their overuse is one of the ways
+      antimicrobial resistance develops and spreads, in aquaculture and beyond
+      it. Two questions follow. First, what actually keeps shrimp resilient, so
+      that treatment after the fact is needed less often? Second, how do we
+      know whether the antimicrobials that are used are being used well?
+
+      The first question is the subject of the published nutrition studies
+      below. The second is the direction of my current, unpublished work on
+      antimicrobial resistance.
+  - key: approach
+    title: Approach
+    body: |
+      I have worked with the Faculty of Fisheries at Kasetsart University on
+      aquaculture health research, including feeding trials that test whether a
+      specific dietary ingredient improves growth, immune response, or survival
+      in farmed shrimp. The published studies I have co-authored examine
+      chestnut wood polyphenols, dietary yeast nucleic acids and free
+      nucleotides, and spray-dried porcine plasma. Each asks a version of the
+      same question: can a change in nutrition make shrimp more resilient?
+
+      My antimicrobial-resistance work is separate from these studies. It is in
+      progress, and I describe it here as a direction rather than a result.
+  - key: contribution
+    title: My contribution
+    body: |
+      I am a co-author on the three peer-reviewed studies listed below, as a
+      student member of a research group led by faculty at Kasetsart
+      University. The trials and analyses were collaborative work, and the
+      published records give the full author lists.
+
+      My current work on antibiotics and antimicrobial resistance is ongoing
+      and not yet published.
+  - key: evidence
+    title: Evidence and status
+    body: |
+      - Three peer-reviewed publications, 2025 to 2026, with co-author
+        attribution (see below).
+      - Antimicrobial-resistance research: in progress. No manuscript is
+        published or under review at the time of writing, and I will update
+        this page only when that changes.
+  - key: next
+    title: The next question
+    body: |
+      If better nutrition and management reduce the need for treatment, what
+      determines whether a farmer adopts them? That question is not answered in
+      a laboratory. It is the reason I built [ShrimpPulse](/work/shrimppulse).
+
+publicationsHeading: Publications
+publicationsNote: >-
+  Listed with co-author attribution. Full author lists, volume, issue, and page
+  numbers are in the linked records.
+publications:
+  - jfe-2026-chestnut-polyphenols
+  - pubmed-2026-yeast-nucleotides
+  - jfe-2025-porcine-plasma
+
+galleries:
+  - heading: From the laboratory and the field
+    description: Photographs, figures, and posters from this work will appear here.
+    columns: 3
+    images:
+      - src: ''
+        alt: ''
+        caption: ''
+        placeholder: Laboratory photograph
+      - src: ''
+        alt: ''
+        caption: ''
+        placeholder: Feeding trial or pond
+      - src: ''
+        alt: ''
+        caption: ''
+        placeholder: Figure or poster
+
+links: []
+# Example:
+#  - label: Poster (PDF)
+#    href: /files/aquaculture-poster.pdf
+#    kind: download
+
+related:
+  - label: ShrimpPulse, a decision-support tool for farmers
+    href: /work/shrimppulse
+    kind: internal
+
+notes: |
+  EDITING NOTES (never shown on the site)
+  - Add your specific part in each study (e.g. sample preparation, data
+    collection, analysis, writing) to the "My contribution" step once you
+    have confirmed it with your supervisor.
+  - Add a period (e.g. "2025 – present") when you want one shown.
+  - Replace the empty image slots with photographs: put files in
+    src/assets/images/research/ and set src: research/your-file.jpg

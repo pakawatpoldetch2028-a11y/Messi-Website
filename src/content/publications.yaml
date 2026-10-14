@@ -1,0 +1,49 @@
+# ---------------------------------------------------------------------------
+# Publications (co-author attribution)
+#
+# Each entry needs a unique `id`, which is how a project page refers to it.
+# The titles below describe each study; replace them with the exact published
+# titles, and add `authors`, `volume`, `issue`, `pages` and `doi` from the
+# linked records. Set citationVerified: true once you have checked an entry.
+# ---------------------------------------------------------------------------
+
+- id: jfe-2026-chestnut-polyphenols
+  title: Chestnut wood polyphenols and the health of Pacific white shrimp
+  year: 2026
+  journal: Journal of Fisheries and Environment
+  url: https://li01.tci-thaijo.org/index.php/JFE/article/view/270980
+  role: Co-author
+  summary: >-
+    A study of whether chestnut wood polyphenols, a plant-derived feed additive,
+    affect the health of Pacific white shrimp (*Litopenaeus vannamei*).
+  status: published
+  citationVerified: false
+  published: true
+  notes: Replace the title with the exact published title; add authors, volume, issue, pages, DOI.
+
+- id: pubmed-2026-yeast-nucleotides
+  title: Dietary yeast nucleic acids and free nucleotides and shrimp health
+  year: 2026
+  url: https://pubmed.ncbi.nlm.nih.gov/42047012/
+  role: Co-author
+  summary: >-
+    A study of dietary yeast-derived nucleic acids and free nucleotides as a
+    feed ingredient and their effect on shrimp health.
+  status: published
+  citationVerified: false
+  published: true
+  notes: Add the journal name, exact title, authors and DOI from the PubMed record (PMID 42047012).
+
+- id: jfe-2025-porcine-plasma
+  title: Spray-dried porcine plasma in pond-reared giant tiger prawns
+  year: 2025
+  journal: Journal of Fisheries and Environment
+  url: https://li01.tci-thaijo.org/index.php/JFE/article/view/267715
+  role: Co-author
+  summary: >-
+    A study of spray-dried porcine plasma as a dietary ingredient for giant
+    tiger prawns (*Penaeus monodon*) reared in ponds.
+  status: published
+  citationVerified: false
+  published: true
+  notes: Replace the title with the exact published title; add authors, volume, issue, pages, DOI.

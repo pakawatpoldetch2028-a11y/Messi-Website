@@ -1,0 +1,85 @@
+---
+/**
+ * Optional video: either a YouTube link or a file in public/. Renders nothing
+ * if neither is set, so the layout never shows an empty player.
+ */
+import Figure from './Figure.astro';
+import { href } from '../lib/url';
+import { mdInline } from '../lib/markdown';
+
+interface Props {
+  video?: {
+    title?: string;
+    youtube?: string;
+    src?: string;
+    poster?: Parameters<typeof Figure>[0]['image'];
+    caption?: string;
+    published?: boolean;
+  };
+  placeholder?: string;
+}
+const { video, placeholder } = Astro.props;
+
+function youtubeId(url: string): string | undefined {
+  const m = url.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/)([\w-]{6,})/);
+  return m?.[1];
+}
+
+const show = video && video.published !== false && (video.youtube || video.src);
+const id = video?.youtube ? youtubeId(video.youtube) : undefined;
+const posterSrc = undefined;
+---
+
+{
+  show ? (
+    <figure class="video">
+      <div class="video__frame">
+        {id ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${id}`}
+            title={video?.title ?? 'Video'}
+            loading="lazy"
+            allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        ) : (
+          <video controls preload="metadata" poster={posterSrc} src={href(video!.src!)}>
+            <p>
+              Your browser cannot play this video. <a href={href(video!.src!)}>Download it instead.</a>
+            </p>
+          </video>
+        )}
+      </div>
+      {video?.caption && <figcaption class="video__caption sans" set:html={mdInline(video.caption)} />}
+    </figure>
+  ) : placeholder ? (
+    <Figure image={{ placeholder, alt: '' }} ratio="16/9" sizes="(min-width: 72rem) 56rem, 100vw" />
+  ) : null
+}
+
+<style>
+  .video {
+    margin: 0;
+  }
+  .video__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--paper-3);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .video__frame iframe,
+  .video__frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .video__caption {
+    margin-top: 0.7rem;
+    font-size: 0.8rem;
+    color: var(--ink-3);
+  }
+</style>

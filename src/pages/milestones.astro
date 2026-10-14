@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import MilestoneItem from '../components/MilestoneItem.astro';
+import Gallery from '../components/Gallery.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { getPublishedMilestones, milestoneGroupLabels } from '../lib/content';
+import { milestoneGroups } from '../content.config';
+
+const milestones = await getPublishedMilestones();
+const groups = milestoneGroups
+  .map((key) => ({ key, label: milestoneGroupLabels[key] ?? key, items: milestones.filter((m) => m.data.group === key) }))
+  .filter((g) => g.items.length > 0);
+
+// Certificates and event photographs attached to milestones, for the gallery
+// at the bottom of the page.
+const attachments = milestones
+  .filter((m) => m.data.image && m.data.image.published !== false)
+  .map((m) => ({
+    ...m.data.image!,
+    caption: m.data.image!.caption ?? m.data.title,
+    placeholder: m.data.image!.placeholder ?? 'Certificate',
+  }));
+
+const description =
+  'A dated record of high-school milestones for Pakawat (Messi) Poldetch, grouped by discipline: economics, philosophy, history, neuroscience, public speaking, recognition, and music.';
+---
+
+<Base title="Milestones" description={description}>
+  <section class="page-head">
+    <div class="wrap page-head__grid">
+      <div>
+        <p class="eyebrow">Milestones</p>
+        <h1>A dated record</h1>
+      </div>
+      <div class="page-head__intro prose prose--lead">
+        <p>
+          High-school accomplishments, grouped by discipline. Where a milestone belongs to a
+          project or an interest described elsewhere on this site, it links there, because the
+          work matters more than the list.
+        </p>
+      </div>
+      <nav class="jump sans" aria-label="Groups on this page">
+        {groups.map((g) => <a href={`#${g.key}`}>{g.label}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {
+    groups.map((group) => (
+      <section class="section group" id={group.key}>
+        <div class="wrap group__grid">
+          <h2 class="group__title">{group.label}</h2>
+          <ol class="plain-list group__list">
+            {group.items.map((m) => (
+              <MilestoneItem milestone={m} />
+            ))}
+          </ol>
+        </div>
+      </section>
+    ))
+  }
+
+  {
+    attachments.length > 0 && (
+      <section class="section section--rule">
+        <div class="wrap">
+          <SectionHeading
+            eyebrow="Documents"
+            title="Selected certificates and photographs"
+            intro="A small selection; the full record above speaks for itself."
+            align="split"
+          />
+          <Gallery images={attachments} columns={4} ratio="4/3" />
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 6vw, 5rem) var(--space-7);
+  }
+  .page-head__grid {
+    display: grid;
+    gap: var(--space-5);
+    align-items: end;
+  }
+  @media (min-width: 60em) {
+    .page-head__grid {
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--space-5) var(--space-8);
+    }
+    .jump {
+      grid-column: 1 / -1;
+    }
+  }
+  .page-head h1 {
+    margin-bottom: 0;
+  }
+  .page-head__intro {
+    color: var(--ink-2);
+  }
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .jump a {
+    font-size: 0.82rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .jump a:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  .group {
+    padding-block: 0 var(--space-7);
+  }
+  .group__grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (min-width: 60em) {
+    .group__grid {
+      grid-template-columns: minmax(12rem, 1fr) 3fr;
+      gap: var(--space-8);
+    }
+    .group__title {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+    }
+  }
+  .group__title {
+    font-size: var(--step-2);
+    padding-top: var(--space-5);
+    border-top: 2px solid var(--ink);
+  }
+  .group__list {
+    border-bottom: 1px solid var(--line);
+  }
+</style>

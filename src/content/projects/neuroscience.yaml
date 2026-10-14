@@ -1,0 +1,121 @@
+# ---------------------------------------------------------------------------
+# Case study: neuroscience and connectomics
+# ---------------------------------------------------------------------------
+
+title: The H1 neuron and the fly visual system
+area: Neuroscience and connectomics
+summary: >-
+  A report on how the structure of a single motion-sensitive neuron in the fly
+  brain relates to its function. Winner of the High School Category of the
+  2025 Fly Connectome Research Competition.
+order: 3
+published: true
+status:
+  label: Report complete · continuing in human neuroscience
+  tone: active
+period: 2025 – 2026
+role: Author
+
+card:
+  src: ''
+  alt: ''
+  ratio: '4/3'
+  placeholder: Neuron visualisation
+
+hero:
+  src: ''
+  alt: ''
+  caption: ''
+  ratio: '16/9'
+  placeholder: Neuron visualisation
+
+intro: |
+  A connectome is a wiring diagram: a map of every neuron in a brain and every
+  connection between them. For the fruit fly, that map now exists. My report
+  looked at one neuron inside it, H1, and asked what its connections can tell
+  us about what it does.
+
+steps:
+  - key: question
+    title: The question
+    body: |
+      H1 is one of the best-studied neurons in the fly's visual system. It
+      responds to wide-field horizontal motion, the kind of visual flow a fly
+      experiences when it turns, and decades of electrophysiology describe its
+      behaviour in detail. The connectome adds something different: it shows
+      what H1 is connected to.
+
+      The question I set myself was whether structure can explain function. If
+      you know a neuron's inputs and outputs, how much of its role can you
+      read directly from the wiring, and where does the wiring alone fall
+      short?
+  - key: approach
+    title: Approach
+    body: |
+      The report examines H1's place in the fly visual circuit, drawing on the
+      published fly connectome data and on the physiological literature that
+      describes what H1 computes. It sets the two side by side: what the
+      anatomy suggests, what the physiology shows, and where they agree or
+      leave questions open.
+
+      What appeals to me about connectomics is how literal it makes the
+      question. A circuit is a set of parts and relationships. If understanding
+      the relationships explains the behaviour, that is my central question
+      answered in miniature.
+  - key: contribution
+    title: My contribution
+    body: |
+      I researched and wrote the report as my entry to the High School
+      Category of the 2025 Fly Connectome Research Competition.
+  - key: evidence
+    title: Evidence and status
+    body: |
+      The report won the High School Category of the 2025 Fly Connectome
+      Research Competition, announced in 2026. The award supports the work; the
+      work itself is in the report, which will be available to read here once I
+      add it.
+  - key: next
+    title: The next question
+    body: |
+      This year I am continuing in human neuroscience. The Connectome Research
+      Competition has expanded to use fMRI data from humans, and I also aim to
+      compete in the International Neuroscience Olympiad. The question stays
+      the same at a different scale: what does structure tell us about
+      function, and how much does the answer change when the data is a
+      whole-brain scan rather than a wiring diagram?
+
+galleries:
+  - heading: Figures and the report
+    columns: 2
+    images:
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '4/3'
+        placeholder: Neuron visualisation
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '210/297'
+        placeholder: Report preview
+
+links: []
+# Example:
+#  - label: Read the report (PDF)
+#    href: /files/h1-neuron-report.pdf
+#    kind: download
+#  - label: Competition announcement
+#    href: https://example.com
+#    kind: external
+
+related:
+  - label: FlyComp 2025 on the milestones page
+    href: /milestones#flycomp-2025-winner
+    kind: internal
+
+notes: |
+  EDITING NOTES (never shown on the site)
+  - Put the report PDF in public/files/ and add a download link under `links`.
+  - Add a neuron visualisation image to src/assets/images/neuroscience/ and
+    reference it in the gallery and the hero.
+  - Add the competition's official name and link if you want them public.

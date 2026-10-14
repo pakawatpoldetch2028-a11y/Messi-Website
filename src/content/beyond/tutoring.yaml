@@ -1,0 +1,16 @@
+# Beyond the Lab: English tutoring (UNPUBLISHED until details are confirmed)
+title: English tutoring
+lede: Kasetsart University
+order: 6
+published: false
+body: |
+  English tutoring at Kasetsart University. (Add who you tutored, how often,
+  and when, then set published: true.)
+items:
+  - title: English tutoring, Kasetsart University
+    role: Tutor
+    period: ''
+    description: ''
+notes: |
+  Confirm dates and that the involvement falls within high school before
+  publishing.

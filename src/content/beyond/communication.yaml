@@ -1,0 +1,58 @@
+# Beyond the Lab: communication and participation
+title: Communication and participation
+lede: Public speaking, debate, and representing others
+order: 4
+published: true
+body: |
+  Explaining something clearly is part of understanding it, and most of what I
+  work on only matters if it can be explained to someone outside the field. I
+  speak in public when I can, compete in formats that reward quick and careful
+  argument, and take on responsibilities that involve speaking for other
+  people.
+items:
+  - title: TEDx Bangkok Youth
+    role: Speaker, "Pursuit of Passion"
+    description: >-
+      A talk on the pursuit of passion, given at a TEDx Bangkok Youth event.
+    # href: https://www.youtube.com/watch?v=...   # add the recording link if there is one
+  - title: Future Leaders Speech Contest
+    role: Third place, final round, 2024 and 2025
+    href: /milestones#future-leaders-2025
+  - title: Model United Nations
+    role: Delegate
+    description: >-
+      Taking part in Model United Nations conferences, which reward preparation,
+      listening, and finding positions that other delegates can accept.
+  - title: History Bee and Bowl
+    role: Competitor
+    description: >-
+      Individual and team history quiz competitions. The Bowl in particular is
+      a team event, and winning it depends on knowing what your teammates know.
+  - title: Academic Bowl
+    role: Competitor
+  - title: Homeroom representative
+    role: Ruamrudee International School
+    description: >-
+      Representing my homeroom, which mostly means carrying questions and
+      concerns between classmates and the school and making sure they are
+      heard.
+gallery:
+  - src: ''
+    alt: ''
+    caption: ''
+    ratio: '3/2'
+    placeholder: Speaking photograph
+  - src: ''
+    alt: ''
+    caption: ''
+    ratio: '3/2'
+    placeholder: Competition photograph
+galleryColumns: 2
+reflection:
+  title: A reflection
+  body: ''
+notes: |
+  - Add the TEDx talk date and recording link when available (the milestone
+    entry "tedx-bangkok-youth" in milestones.yaml is unpublished until then).
+  - Add MUN conference names, committees or awards if you want them shown.
+  - Add photographs to src/assets/images/events/.

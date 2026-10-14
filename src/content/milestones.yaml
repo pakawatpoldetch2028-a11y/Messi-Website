@@ -1,0 +1,225 @@
+# ---------------------------------------------------------------------------
+# Milestones: high-school accomplishments, grouped by discipline.
+#
+# Fields
+#   id            unique, used for links such as /milestones#ieo-2026-bronze
+#   group         economics | philosophy | history | neuroscience | speaking |
+#                 recognition | music
+#   date          "2026", "2026-01" or "2026-01-15" (as precise as you know)
+#   dateLabel     optional text shown instead of the formatted date
+#   outcome       the result, e.g. "Bronze medal"
+#   organisation  who awarded it
+#   description   a sentence or two (markdown)
+#   details       optional bullet list
+#   href          link to a project page, a Beyond the Lab section, or a URL
+#   image         optional certificate or photograph (src inside src/assets/images)
+#   featured      true to allow it on the home page (home.yaml picks by id)
+#   published     set false to keep an entry private until confirmed
+# ---------------------------------------------------------------------------
+
+# ---- Economics -------------------------------------------------------------
+
+- id: ieo-2026-bronze
+  title: International Economics Olympiad
+  group: economics
+  date: '2026'
+  outcome: Bronze medal
+  description: >-
+    Competing for Thailand at the international round.
+  href: /beyond#economics
+  hrefLabel: Economics, beyond the lab
+  image:
+    src: ''
+    alt: ''
+    placeholder: Certificate
+  featured: true
+  published: true
+
+- id: teo-2026-gold
+  title: Thailand Economics Olympiad
+  group: economics
+  date: '2026'
+  outcome: Gold medal
+  href: /beyond#economics
+  hrefLabel: Economics, beyond the lab
+  image:
+    src: ''
+    alt: ''
+    placeholder: Certificate
+  featured: true
+  published: true
+
+- id: ieox-2026-top-40
+  title: IEOx Essay Challenge
+  group: economics
+  date: '2026'
+  outcome: Preliminary round, Top 40
+  organisation: International Economics Olympiad
+  href: /beyond#economics
+  hrefLabel: Economics, beyond the lab
+  featured: false
+  published: true
+
+# ---- Philosophy ------------------------------------------------------------
+
+- id: ipo-2025-honourable-mention
+  title: International Philosophy Olympiad
+  group: philosophy
+  date: '2025'
+  outcome: Honourable mention
+  description: >-
+    Represented Thailand at the 2025 International Philosophy Olympiad and
+    received an honourable mention.
+  href: /beyond#history-philosophy
+  hrefLabel: History and philosophy, beyond the lab
+  image:
+    src: ''
+    alt: ''
+    placeholder: Certificate
+  featured: true
+  published: true
+
+- id: ipo-2026-representative
+  title: International Philosophy Olympiad
+  group: philosophy
+  date: '2026'
+  outcome: Thailand representative
+  description: >-
+    Selected to represent Thailand for a second year.
+  href: /beyond#history-philosophy
+  hrefLabel: History and philosophy, beyond the lab
+  featured: false
+  published: true
+
+# ---- History ---------------------------------------------------------------
+
+- id: iho-2025
+  title: International History Olympiad
+  group: history
+  date: '2025'
+  outcome: First place, written exam
+  details:
+    - First place, written exam
+    - Second place, East Asian history
+    - Third place, modern European history
+    - Third place, STEM history bee
+    - Third place, symposium
+  href: /beyond#history-philosophy
+  hrefLabel: History and philosophy, beyond the lab
+  image:
+    src: ''
+    alt: ''
+    placeholder: Event photograph
+  featured: true
+  published: true
+
+# ---- Neuroscience ----------------------------------------------------------
+
+- id: flycomp-2025-winner
+  title: Fly Connectome Research Competition (FlyComp) 2025
+  group: neuroscience
+  date: '2026'
+  dateLabel: 2025 competition · announced 2026
+  outcome: Winner, High School Category
+  description: >-
+    For a report examining the H1 neuron and the fly visual system.
+  href: /work/neuroscience
+  hrefLabel: Read about the report
+  image:
+    src: ''
+    alt: ''
+    placeholder: Certificate
+  featured: true
+  published: true
+
+# ---- Public speaking -------------------------------------------------------
+
+- id: future-leaders-2025
+  title: Future Leaders Speech Contest
+  group: speaking
+  date: '2025'
+  outcome: Third place, final round
+  href: /beyond#communication
+  hrefLabel: Communication, beyond the lab
+  featured: false
+  published: true
+
+- id: future-leaders-2024
+  title: Future Leaders Speech Contest
+  group: speaking
+  date: '2024'
+  outcome: Third place, final round
+  href: /beyond#communication
+  hrefLabel: Communication, beyond the lab
+  featured: false
+  published: true
+
+- id: tedx-bangkok-youth
+  title: TEDx Bangkok Youth
+  group: speaking
+  date: ''
+  outcome: Speaker, "Pursuit of Passion"
+  href: /beyond#communication
+  hrefLabel: Communication, beyond the lab
+  featured: false
+  published: false
+  notes: "Add the event date, then set published: true."
+
+# ---- Scholarships and recognition -----------------------------------------
+
+- id: young-tham-dee-2025
+  title: "Young Smart: Young Tham Dee Award 2025"
+  group: recognition
+  date: 2026-01
+  dateLabel: 2025 award · received January 2026
+  outcome: Award recipient
+  image:
+    src: ''
+    alt: ''
+    placeholder: Certificate
+  featured: false
+  published: true
+  notes: Add the awarding organisation to `organisation` if you want it shown.
+
+- id: moe-recognition-2026
+  title: Ministry of Education recognition, academic category
+  group: recognition
+  date: 2026-01
+  organisation: Ministry of Education, Thailand
+  featured: false
+  published: true
+
+- id: ris-scholarship
+  title: Academic scholarship
+  group: recognition
+  date: '2024'
+  dateLabel: Grades 9–10
+  organisation: Ruamrudee International School
+  featured: false
+  published: true
+
+# ---- Music -----------------------------------------------------------------
+
+- id: trinity-guitar-grade-8
+  title: Classical Guitar, Grade 8
+  group: music
+  date: ''
+  organisation: Trinity College London
+  outcome: Grade 8
+  href: /beyond#music
+  hrefLabel: Music, beyond the lab
+  featured: false
+  published: true
+  notes: Add the date of the examination.
+
+- id: abrsm-clarinet-grade-6
+  title: Clarinet in B♭, Grade 6
+  group: music
+  date: ''
+  organisation: ABRSM
+  outcome: Grade 6
+  href: /beyond#music
+  hrefLabel: Music, beyond the lab
+  featured: false
+  published: true
+  notes: Add the date of the examination.

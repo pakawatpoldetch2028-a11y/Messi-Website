@@ -1,0 +1,113 @@
+# ---------------------------------------------------------------------------
+# Case study: Telesync
+# ---------------------------------------------------------------------------
+
+title: Telesync
+area: Telemedicine device and application
+summary: >-
+  A telemedical device paired with a dedicated application, intended to make
+  healthcare easier to reach for patients and providers, including in rural
+  Thailand. Now in pilot testing with healthcare providers.
+order: 4
+published: true
+status:
+  label: Pilot testing with healthcare providers
+  tone: active
+role: Contributor
+
+card:
+  src: ''
+  alt: ''
+  ratio: '4/3'
+  placeholder: Telesync device
+
+hero:
+  src: ''
+  alt: ''
+  caption: ''
+  ratio: '16/9'
+  placeholder: Telesync device and application
+
+intro: |
+  Telesync combines a physical telemedical device with an application that
+  connects patients and healthcare providers. The aim is accessibility: for a
+  patient far from a hospital, and for a provider who cannot be in every place
+  at once. I contribute to the project as part of a team, and it has extended
+  my interest in practical tools from farms to human health.
+
+steps:
+  - key: question
+    title: The problem
+    body: |
+      Distance from care is partly a problem of geography and partly one of
+      information. A provider needs reliable measurements and a way to
+      communicate; a patient needs a path to care that does not require a day
+      of travel. In rural Thailand both constraints are real. Can a device and
+      an application, designed together, shorten that path?
+  - key: approach
+    title: Approach
+    body: |
+      Telesync pairs a device used at the patient's side with an application
+      that patients and providers use to share information and communicate. The
+      project is being developed with input from healthcare providers and is
+      now in pilot testing with them, which is where the design will be tested
+      against reality.
+  - key: contribution
+    title: My contribution
+    body: |
+      I am a contributor to Telesync and work as part of a team; the project is
+      not mine alone. What drew me to it is the same thing that drew me to
+      ShrimpPulse: the gap between what is known and what reaches the person
+      who needs it, and the question of what it takes to close that gap in a
+      way people will trust.
+  - key: evidence
+    title: Evidence and status
+    body: |
+      Pilot testing with healthcare providers is under way. The benefits
+      described on this page are intended, not demonstrated: there are no
+      clinical outcome results to report, and I will update this page when
+      there are.
+  - key: next
+    title: The next question
+    body: |
+      What would it take for a tool like this to be trusted by the people who
+      would depend on it? Pilot testing will show whether providers find it
+      reliable and worth their time. That answer matters more than any feature.
+
+galleries:
+  - heading: Device and application
+    columns: 2
+    images:
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '4/3'
+        placeholder: Telesync device
+      - src: ''
+        alt: ''
+        caption: ''
+        ratio: '9/16'
+        placeholder: Application screens
+
+# Optional demonstration video.
+video:
+  title: Telesync demonstration
+  youtube: ''
+  src: ''
+  caption: ''
+  published: true
+
+links: []
+
+related:
+  - label: ShrimpPulse, a tool with a similar aim
+    href: /work/shrimppulse
+    kind: internal
+
+notes: |
+  EDITING NOTES (never shown on the site)
+  - Replace "Contributor" with your exact role once confirmed, and describe
+    your technical responsibilities in the "My contribution" step.
+  - Add what the device measures and how the app is used, if that can be
+    public.
+  - Add device and app images to src/assets/images/telesync/.

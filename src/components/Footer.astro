@@ -1,0 +1,136 @@
+---
+import { getSite } from '../lib/content';
+import { href } from '../lib/url';
+
+const site = await getSite();
+const year = new Date().getFullYear();
+const cv = site.cv && site.cv.published && site.cv.href ? site.cv : undefined;
+---
+
+<footer class="site-footer">
+  <div class="wrap footer">
+    <div class="footer__identity">
+      <p class="footer__name">{site.name}</p>
+      <p class="footer__meta sans">{site.school} · {site.location} · {site.cohort}</p>
+    </div>
+
+    <ul class="plain-list footer__links sans">
+      {
+        site.linkedin && (
+          <li>
+            <a href={site.linkedin} rel="me noopener" target="_blank">
+              LinkedIn
+            </a>
+          </li>
+        )
+      }
+      {
+        site.email && (
+          <li>
+            <a href={`mailto:${site.email}`}>Email</a>
+          </li>
+        )
+      }
+      {
+        cv && (
+          <li>
+            <a href={href(cv.href)} download={cv.kind === 'download' ? '' : undefined}>
+              {cv.label}
+            </a>
+          </li>
+        )
+      }
+      {
+        site.nav.map((item) => (
+          <li class="footer__navitem">
+            <a href={href(item.href)}>{item.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="footer__note sans">
+      © {year} {site.name}.{' '}
+      {site.footerNote ?? 'Written and maintained by me; corrections welcome.'}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+    margin-top: var(--space-8);
+  }
+  .footer {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-7);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 48em) {
+    .footer {
+      grid-template-columns: 1.2fr 1fr;
+      grid-template-areas:
+        'identity links'
+        'note links';
+    }
+    .footer__identity {
+      grid-area: identity;
+    }
+    .footer__links {
+      grid-area: links;
+      justify-self: end;
+      text-align: right;
+    }
+    .footer__note {
+      grid-area: note;
+    }
+  }
+  .footer__name {
+    font-size: var(--step-1);
+    margin: 0 0 0.2em;
+  }
+  .footer__meta {
+    font-size: 0.82rem;
+    color: var(--ink-3);
+    margin: 0;
+  }
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    font-size: 0.88rem;
+  }
+  .footer__links a {
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .footer__links a:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+  .footer__navitem {
+    display: none;
+  }
+  @media (min-width: 48em) {
+    .footer__links {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.55rem;
+    }
+    .footer__navitem {
+      display: block;
+    }
+    .footer__navitem:first-of-type {
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+    }
+  }
+  .footer__note {
+    font-size: 0.8rem;
+    color: var(--ink-3);
+    margin: 0;
+  }
+</style>

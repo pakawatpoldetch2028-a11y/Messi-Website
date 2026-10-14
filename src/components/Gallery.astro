@@ -1,0 +1,36 @@
+---
+/**
+ * A grid of Figure slots. Unpublished slots are skipped.
+ */
+import Figure from './Figure.astro';
+
+type ImageSlot = Parameters<typeof Figure>[0] extends { image?: infer T } ? T : never;
+
+interface Props {
+  images: NonNullable<ImageSlot>[];
+  columns?: number;
+  ratio?: string;
+  class?: string;
+}
+const { images, columns = 3, ratio = '4/3', class: className } = Astro.props;
+const visible = images.filter((img) => img.published !== false);
+const sizes = `(min-width: 72rem) ${Math.round(72 / columns)}rem, (min-width: 48em) ${Math.round(100 / columns)}vw, 100vw`;
+---
+
+{
+  visible.length > 0 && (
+    <div class:list={['gallery', className]} style={`--cols: ${columns};`}>
+      {visible.map((img) => (
+        <Figure image={img} ratio={ratio} sizes={sizes} />
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .gallery {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(72rem / var(--cols) - 2rem)), 1fr));
+  }
+</style>

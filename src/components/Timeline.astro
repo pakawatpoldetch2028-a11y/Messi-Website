@@ -1,0 +1,74 @@
+---
+import Prose from './Prose.astro';
+import { formatDate } from '../lib/dates';
+
+interface Props {
+  items: { date: string; title: string; body?: string }[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="plain-list timeline">
+  {
+    items.map((item) => (
+      <li class="timeline__item">
+        <span class="timeline__date sans">{formatDate(item.date)}</span>
+        <div class="timeline__body">
+          <p class="timeline__title">{item.title}</p>
+          {item.body && <Prose text={item.body} muted class="timeline__text" />}
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--line-strong);
+    margin-left: 0.35rem;
+  }
+  .timeline__item {
+    position: relative;
+    padding: 0 0 var(--space-5) var(--space-5);
+    display: grid;
+    gap: 0.3rem;
+  }
+  .timeline__item::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 0.45rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--paper);
+  }
+  .timeline__item:last-child {
+    padding-bottom: 0;
+  }
+  .timeline__date {
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .timeline__title {
+    margin: 0;
+    font-size: var(--step-0);
+  }
+  .timeline__body :global(.timeline__text) {
+    font-size: 0.95rem;
+  }
+  @media (min-width: 48em) {
+    .timeline__item {
+      grid-template-columns: 9rem 1fr;
+      gap: var(--space-4);
+    }
+    .timeline__date {
+      padding-top: 0.3rem;
+    }
+  }
+</style>
